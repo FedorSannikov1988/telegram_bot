@@ -1,19 +1,20 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, \
+                          KeyboardButton
 
 commands_default_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text='/start'),
             KeyboardButton(text='/help')
+        ],
+        [
+            KeyboardButton(text='/manual')
         ],
         [
             KeyboardButton(text='/menu')
         ],
         [
-            KeyboardButton(text='Подвердить номер телефона',
-                           request_contact=True)
+            KeyboardButton(text='/developer')
         ]
-
     ],
     resize_keyboard=True
 )
