@@ -1,6 +1,5 @@
-from aiogram import types
-
 from keyboards import commands_default_keyboard
+from aiogram import types
 from loader import dp
 
 all_commands_for_users: dict = \
