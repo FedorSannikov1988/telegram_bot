@@ -6,10 +6,6 @@ class Database:
     def __init__(self, db_path: str | Path = 'shop_database.db'):
         self.db_path = db_path
 
-    # почему нельзя использовать
-    # sqlite3.connect(self.db_path)
-    # в различных встроенных
-    # функцияхметоде
     @property
     def connection(self):
         return sqlite3.connect(self.db_path)
@@ -45,7 +41,7 @@ class Database:
         self.execute(sql, parameters, commit=True)
 
     def select_user_info(self, **kwargs) -> list:
-        sql = 'SELECT * FROM Users WHERE'
+        sql = 'SELECT * FROM Users WHERE '
         sql, parameters = self.format_args(sql, kwargs)
         return self.execute(sql, parameters, fetchall=True)
 
@@ -74,3 +70,13 @@ class Database:
             f'{item} = ?' for item in parameters
         ])
         return sql, tuple(parameters.values())
+
+
+if __name__ == '__main__':
+    def format_args(parameters: dict, sql='SELECT * FROM Users WHERE ') -> tuple:
+        sql += ' AND '.join([
+            f'{item} = ?' for item in parameters
+        ])
+        return sql, tuple(parameters.values())
+
+    print(format_args(parameters={'id': 12, 'phone': '123456789'}))
