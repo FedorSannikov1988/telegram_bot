@@ -50,7 +50,7 @@ class Database:
         return self.execute(sql, fetchall=True)
 
     def update_user_phone(self, id: int, phone: str):
-        sql = 'UPDATE Users phone=? WHERE id=?'
+        sql = 'UPDATE Users SET phone=? WHERE id=?'
         return self.execute(sql, parameters=(phone, id), commit=True)
 
     def delete_user(self, **kwargs):

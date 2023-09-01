@@ -1,6 +1,8 @@
+from aiogram.types import ReplyKeyboardRemove
 from keyboards import commands_default_keyboard
 from aiogram import types
 from loader import dp
+from loader import db
 
 all_commands_for_users: dict = \
     {
@@ -65,3 +67,21 @@ async def developer_bot(message: types.Message):
     text: str = \
         'Данного бота разработал: @Fedor_Sannikov'
     await message.answer(text=text)
+
+
+@dp.message_handler(text=['Скрыть меню'])
+async def answer_close_command(message: types.Message):
+    await message.answer(text='Что бы вернуть меню ...',
+                         reply_markup=ReplyKeyboardRemove())
+
+
+@dp.message_handler(content_types=['contact'])
+async def answer_contact_command(message: types.Message):
+    if message.contact.user_id == message.from_user.id:
+        text: str = 'Регистрация прошла успешно!'
+        await message.answer(text=text)
+        db.add_user(int(message.from_user.id),
+                    str(message.contact.phone_number))
+    else:
+        text: str = 'Регистрация НЕ прошла'
+        await message.answer(text=text)

@@ -14,6 +14,10 @@ commands_default_keyboard = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text='/developer')
+        ],
+        [
+            KeyboardButton(text='Добавить номер телефона',
+                           request_contact=True)
         ]
     ],
     resize_keyboard=True
