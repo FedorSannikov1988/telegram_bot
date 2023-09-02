@@ -16,5 +16,5 @@ try:
     db.create_table_products()
 except sqlite3.OperationalError as sql_error:
     print(f'{sql_error = }')
-except Exception as error:
-    print(f'{error = }')
+except Exception as all_error:
+    print(f'{all_error = }')
