@@ -25,6 +25,9 @@ class Database:
         connection.close()
         return data
 
+    # немного доработал метод что бы каждый
+    # раз при запуске бота не выдвал
+    # ошибку чо таблица создана
     def create_table_users(self):
         sql = """
         CREATE TABLE IF NOT EXISTS Users(
@@ -105,7 +108,3 @@ class Database:
             f'{item} = ?' for item in parameters
         ])
         return sql, tuple(parameters.values())
-
-
-if __name__ == '__main__':
-    pass
