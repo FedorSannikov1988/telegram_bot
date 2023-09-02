@@ -10,6 +10,13 @@ class Database:
     # переделать всего два метода connection и
     # create_table_users но нужно ли это сейчас ?
     # или спокойно пойти дальше по програме обучения ?
+    # https://github.com/omnilib/aiosqlite
+    # db = await aiosqlite.connect(...)
+    # cursor = await db.execute('SELECT * FROM some_table')
+    # row = await cursor.fetchone()
+    # rows = await cursor.fetchall()
+    # await cursor.close()
+    # await db.close()
 
     @property
     def connection(self):
