@@ -6,6 +6,9 @@ class Database:
     def __init__(self, db_path: str | Path = 'shop_database.db'):
         self.db_path = db_path
 
+    # насколько понимаю нужно для работы с aiosqlite
+    # переделать всего два метода
+    # но нужно ли это сейчас ?
     @property
     def connection(self):
         return sqlite3.connect(self.db_path)
