@@ -7,8 +7,10 @@ class Database:
         self.db_path = db_path
 
     # насколько понимаю нужно для работы с aiosqlite
-    # переделать всего два метода
-    # но нужно ли это сейчас ?
+    # переделать всего два метода connection и
+    # create_table_users но нужно ли это сейчас ?
+    # или спокойно пойти дальше по програме обучения ?
+
     @property
     def connection(self):
         return sqlite3.connect(self.db_path)
