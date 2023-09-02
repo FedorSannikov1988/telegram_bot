@@ -32,8 +32,6 @@ async def manual_for_bot(message: types.Message):
     url_gif_for_user: str = \
         all_urls['manual_for_bot']
 
-    print(url_gif_for_user)
-
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'
@@ -56,7 +54,7 @@ async def menu_bot(message: types.Message):
 
 
 @dp.message_handler(content_types=['contact'])
-async def answer_contact_command(message: types.Message):
+async def get_contact_users(message: types.Message):
     if message.contact.user_id == message.from_user.id:
         text: str = 'Регистрация пройдена'
         await message.answer(text=text)

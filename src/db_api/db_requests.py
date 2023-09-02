@@ -26,11 +26,20 @@ class Database:
         return data
 
     def create_table_users(self):
+        sql = """
+        CREATE TABLE IF NOT EXISTS Users(
+        id INTEGER PRIMARY KEY NOT NULL,
+        phone VARCHAR(12)
+        );
+        """
+        self.execute(sql, commit=True)
+
+    def create_table_products(self):
         sql = """ 
-        CREATE TABLE Users(
-        id int Not Null,
-        phone text,
-        PRIMARY KEY (id)
+        CREATE TABLE IF NOT EXISTS Products(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name VARCHAR(300),
+		quantity UNSIGNED INT
         );
         """
         self.execute(sql, commit=True)
@@ -40,8 +49,18 @@ class Database:
         parameters = (id, phone)
         self.execute(sql, parameters, commit=True)
 
+    def add_product(self, name: str, quantity: int):
+        sql = 'INSERT INTO Products(name, quantity) VALUES(?, ?)'
+        parameters = (name, quantity)
+        self.execute(sql, parameters, commit=True)
+
     def select_user_info(self, **kwargs) -> list:
         sql = 'SELECT * FROM Users WHERE '
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters, fetchall=True)
+
+    def select_product_info(self, **kwargs) -> list:
+        sql = 'SELECT * FROM Products WHERE '
         sql, parameters = self.format_args(sql, kwargs)
         return self.execute(sql, parameters, fetchall=True)
 
@@ -49,19 +68,35 @@ class Database:
         sql = 'SELECT * FROM Users'
         return self.execute(sql, fetchall=True)
 
+    def select_all_products(self) -> list:
+        sql = 'SELECT * FROM Products'
+        return self.execute(sql, fetchall=True)
+
     def update_user_phone(self, id: int, phone: str):
         sql = 'UPDATE Users SET phone=? WHERE id=?'
         return self.execute(sql, parameters=(phone, id), commit=True)
+
+    def update_quantity_product(self, name: str, quantity: int):
+        sql = 'UPDATE Products SET quantity=? WHERE name=?'
+        return self.execute(sql, parameters=(quantity, name), commit=True)
 
     def delete_user(self, **kwargs):
         sql = 'DELETE FROM Users WHERE '
         sql, parameters = self.format_args(sql, parameters=kwargs)
         return self.execute(sql, parameters=parameters, commit=True)
 
-    def delete_all(self):
+    def delete_product(self, **kwargs):
+        sql = 'DELETE FROM Products WHERE '
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return self.execute(sql, parameters=parameters, commit=True)
+
+    def delete_all_users(self):
         self.execute('DELETE FROM Users WHERE True', commit=True)
 
-    def drop_all(self):
+    def delete_all_products(self):
+        self.execute('DELETE FROM Products WHERE True', commit=True)
+
+    def drop_all_tables(self):
         self.execute('DROP TABLE Users', commit=True)
 
     @staticmethod
@@ -73,10 +108,4 @@ class Database:
 
 
 if __name__ == '__main__':
-    def format_args(parameters: dict, sql='SELECT * FROM Users WHERE ') -> tuple:
-        sql += ' AND '.join([
-            f'{item} = ?' for item in parameters
-        ])
-        return sql, tuple(parameters.values())
-
-    print(format_args(parameters={'id': 12, 'phone': '123456789'}))
+    pass

@@ -27,14 +27,14 @@ all_urls: dict = \
 
 
 if __name__ == '__main__':
-    json_file_path = Path('data_storage_text', 'users_answers.json')
+    all_answer_for_user_path = Path('data_storage_text', 'users_answers.json')
     all_answer_for_user: dict = \
         load_answer_for_user(path_for_file=
-                             json_file_path)
+                             all_answer_for_user_path)
     print(all_answer_for_user)
-
-    json_file_path = Path('data_storage_text', 'urls.json')
+    
+    all_urls_path = Path('data_storage_text', 'urls.json')
     all_urls: dict = \
         load_answer_for_user(path_for_file=
-                             json_file_path)
+                             all_urls_path)
     print(all_urls)

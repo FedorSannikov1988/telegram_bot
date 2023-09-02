@@ -1,5 +1,9 @@
 from keyboards import commands_start_keyboard
 from aiogram.types import ReplyKeyboardRemove
+# вероятно не очень хорошо что я подгружаю из
+# соседнего модуля но с другой стороны зачем
+# грузить и замет обрабатывать из from answers
+# если это сделано в .commands
 from .commands import all_commands_for_users
 from answers import all_urls
 from aiogram import types
@@ -28,7 +32,7 @@ async def give_all_commands_for_users(message: types.Message):
 
 @dp.message_handler(text=['Скрыть меню'])
 async def close_menu(message: types.Message):
-    await message.answer(text='Для вызова меню комманда /start',
+    await message.answer(text='Для вызова меню введите комманду: /start',
                          reply_markup=ReplyKeyboardRemove())
 
 

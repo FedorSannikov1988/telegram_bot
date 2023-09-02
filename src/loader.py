@@ -13,7 +13,8 @@ db = Database(db_path=db_path)
 
 try:
     db.create_table_users()
-except sqlite3.OperationalError as error:
-    print(error)
+    db.create_table_products()
+except sqlite3.OperationalError as sql_error:
+    print(f'{sql_error = }')
 except Exception as error:
-    print(error)
+    print(f'{error = }')
