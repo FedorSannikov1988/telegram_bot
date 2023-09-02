@@ -1,22 +1,12 @@
-from aiogram.types import ReplyKeyboardRemove
-from keyboards import commands_default_keyboard
+from answers import all_answer_for_user, all_urls
+from keyboards import commands_start_keyboard
 from aiogram import types
 from loader import dp
 from loader import db
 
+
 all_commands_for_users: dict = \
-    {
-        '/start': 'начало работы ',
-        '/help': 'список комманд '
-                 'доступных '
-                 'пользователю',
-        '/manual': 'видеоинсрукция',
-        '/menu': 'меню (возможности)'
-                 'которые предоставляет'
-                 'данный бот',
-        '/developer': 'информация о '
-                      'разработчике'
-    }
+    all_answer_for_user['all_commands_for_users']['ru']
 
 
 @dp.message_handler(commands='start')
@@ -25,7 +15,7 @@ async def start_work_bot(message: types.Message):
                 f'{message.from_user.first_name} '
     await message.answer(text=text,
                          reply_markup=
-                         commands_default_keyboard)
+                         commands_start_keyboard)
 
 
 @dp.message_handler(commands='help')
@@ -34,14 +24,16 @@ async def give_all_commands_for_users(message: types.Message):
     for command, description in all_commands_for_users.items():
         text += \
             command + ' - ' + description + '\n'
-
     await message.answer(text=text)
 
 
 @dp.message_handler(commands='manual')
 async def manual_for_bot(message: types.Message):
     url_gif_for_user: str = \
-        'https://media.giphy.com/media/ThrM4jEi2lBxd7X2yz/giphy.gif'
+        all_urls['manual_for_bot']
+
+    print(url_gif_for_user)
+
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'
@@ -53,7 +45,8 @@ async def manual_for_bot(message: types.Message):
 @dp.message_handler(commands='menu')
 async def menu_bot(message: types.Message):
     url_gif_for_user: str = \
-        'https://media.giphy.com/media/l0K4hO8mVvq8Oygjm/giphy.gif'
+        all_urls['menu_bot']
+
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'
@@ -62,26 +55,13 @@ async def menu_bot(message: types.Message):
                                    url_gif_for_user)
 
 
-@dp.message_handler(commands='developer')
-async def developer_bot(message: types.Message):
-    text: str = \
-        'Данного бота разработал: @Fedor_Sannikov'
-    await message.answer(text=text)
-
-
-@dp.message_handler(text=['Скрыть меню'])
-async def answer_close_command(message: types.Message):
-    await message.answer(text='Что бы вернуть меню ...',
-                         reply_markup=ReplyKeyboardRemove())
-
-
 @dp.message_handler(content_types=['contact'])
 async def answer_contact_command(message: types.Message):
     if message.contact.user_id == message.from_user.id:
-        text: str = 'Регистрация прошла успешно!'
+        text: str = 'Регистрация пройдена'
         await message.answer(text=text)
         db.add_user(int(message.from_user.id),
                     str(message.contact.phone_number))
     else:
-        text: str = 'Регистрация НЕ прошла'
+        text: str = 'Регистрация НЕ пройдена'
         await message.answer(text=text)

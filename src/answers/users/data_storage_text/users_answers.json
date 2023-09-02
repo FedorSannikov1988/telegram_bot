@@ -1,0 +1,19 @@
+{
+  "all_commands_for_users":
+  {
+	"ru":
+	{
+	  "/start": "начало работы",
+	  "/help": "список комманд доступных пользователю",
+	  "/manual": "видео инструкция",
+	  "/menu": "меню (возможности) которые предоставляет данный бот"
+	},
+	"en":
+	{
+	  "/start": "start work",
+	  "/help": "list of commands available to the user",
+	  "/manual": "video instructions",
+	  "/menu": "menu (features) which this bot provides"
+	}
+  }
+}

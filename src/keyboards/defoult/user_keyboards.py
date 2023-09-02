@@ -1,24 +1,22 @@
 from aiogram.types import ReplyKeyboardMarkup, \
                           KeyboardButton
 
-commands_default_keyboard = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text='/help')
+commands_start_keyboard = \
+    ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text='Помощь'),
+                KeyboardButton(text='Инструкция')
+            ],
+            [
+                KeyboardButton(text='Меню'),
+                KeyboardButton(text='Разработчик')
+            ],
+            [
+                KeyboardButton(text='Зарегистрироваться',
+                               request_contact=True),
+                KeyboardButton(text='Скрыть меню')
+            ]
         ],
-        [
-            KeyboardButton(text='/manual')
-        ],
-        [
-            KeyboardButton(text='/menu')
-        ],
-        [
-            KeyboardButton(text='/developer')
-        ],
-        [
-            KeyboardButton(text='Добавить номер телефона',
-                           request_contact=True)
-        ]
-    ],
-    resize_keyboard=True
+        resize_keyboard=True
 )
