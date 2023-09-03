@@ -58,7 +58,7 @@ async def get_contact_users(message: types.Message):
     if message.contact.user_id == message.from_user.id:
         text: str = all_answer_for_user['registration_positive']['ru']
         await message.answer(text=text)
-        db.add_user(int(message.from_user.id),
+        await db.add_user(int(message.from_user.id),
                     str(message.contact.phone_number))
     else:
         text: str = all_answer_for_user['registration_negative']['ru']
