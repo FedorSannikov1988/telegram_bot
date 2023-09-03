@@ -6,18 +6,6 @@ class Database:
     def __init__(self, db_path: str | Path = 'shop_database.db'):
         self.db_path = db_path
 
-    # насколько понимаю нужно для работы с aiosqlite
-    # переделать всего два метода connection и
-    # create_table_users но нужно ли это сейчас ?
-    # или спокойно пойти дальше по програме обучения ?
-    # https://github.com/omnilib/aiosqlite
-    # db = await aiosqlite.connect(...)
-    # cursor = await db.execute('SELECT * FROM some_table')
-    # row = await cursor.fetchone()
-    # rows = await cursor.fetchall()
-    # await cursor.close()
-    # await db.close()
-
     @property
     def connection(self):
         return sqlite3.connect(self.db_path)
@@ -37,9 +25,6 @@ class Database:
         connection.close()
         return data
 
-    # немного доработал метод что бы каждый
-    # раз при запуске бота не выдвал
-    # ошибку чо таблица создана
     def create_table_users(self):
         sql = """
         CREATE TABLE IF NOT EXISTS Users(

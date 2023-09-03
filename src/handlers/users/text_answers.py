@@ -1,18 +1,13 @@
+from answers import all_urls, all_answer_for_user
 from keyboards import commands_start_keyboard
 from aiogram.types import ReplyKeyboardRemove
-# вероятно не очень хорошо что я подгружаю из
-# соседнего модуля но с другой стороны зачем
-# грузить и замет обрабатывать из from answers
-# если это сделано в .commands
-from .commands import all_commands_for_users
-from answers import all_urls
 from aiogram import types
 from loader import dp
 
 
 @dp.message_handler(text=['Клавиатура'])
 async def give_start_keyboard_for_users(message: types.Message):
-    text: str = 'Здраствуйте, ' \
+    text: str = f'{all_answer_for_user["greeting"]["ru"]}, ' \
                 f'{message.from_user.first_name} '
     await message.answer(text=text,
                          reply_markup=
@@ -22,7 +17,8 @@ async def give_start_keyboard_for_users(message: types.Message):
 @dp.message_handler(text=['Помощь'])
 async def give_all_commands_for_users(message: types.Message):
     text: str = ''
-    for command, description in all_commands_for_users.items():
+    for command, description in \
+            all_answer_for_user['all_commands_for_users']['ru'].items():
         text += \
             command + ' - ' + description + '\n'
     await message.answer(text=text,
@@ -32,14 +28,17 @@ async def give_all_commands_for_users(message: types.Message):
 
 @dp.message_handler(text=['Скрыть меню'])
 async def close_menu(message: types.Message):
-    await message.answer(text='Для вызова меню введите комманду: /start',
-                         reply_markup=ReplyKeyboardRemove())
+    text: str = \
+        all_answer_for_user['close_menu']['ru']
+    await message.answer(text=text,
+                         reply_markup=
+                         ReplyKeyboardRemove())
 
 
 @dp.message_handler(text=['Разработчик'])
 async def developer_bot(message: types.Message):
     text: str = \
-        'Данного бота разработал: @Fedor_Sannikov'
+        all_answer_for_user['developer_contacts']['ru']
     await message.answer(text=text)
 
 
@@ -48,8 +47,7 @@ async def manual_for_bot(message: types.Message):
     url_gif_for_user: str = \
         all_urls['manual_for_bot']
 
-    print(url_gif_for_user)
-
+    # не помещал данную фразу в json файл
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'
@@ -63,6 +61,7 @@ async def menu_bot(message: types.Message):
     url_gif_for_user: str = \
         all_urls['menu_bot']
 
+    # не помещал данную фразу в json файл
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'

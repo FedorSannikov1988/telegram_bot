@@ -15,5 +15,30 @@
 	  "/manual": "video instructions",
 	  "/menu": "menu (features) which this bot provides"
 	}
+  },
+  "registration_positive":
+  {
+	"ru":"Регистрация пройдена",
+	"en":"Registration completed"
+  },
+  "registration_negative":
+  {
+	"ru":"Регистрация НЕ пройдена",
+	"en":"Registration FAILED"
+  },
+  "greeting":
+  {
+	"ru":"Здраствуйте",
+	"en":"Hello"
+  },
+  "developer_contacts":
+  {
+	"ru":"Данного бота разработал: @Fedor_Sannikov",
+	"en":"This bot was developed by: @Fedor_Sannikov"
+  },
+  "close_menu":
+  {
+	"ru":"Для вызова меню введите комманду: /start",
+	"en":"To open the menu, enter the command: /start"
   }
 }

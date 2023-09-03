@@ -5,13 +5,9 @@ from loader import dp
 from loader import db
 
 
-all_commands_for_users: dict = \
-    all_answer_for_user['all_commands_for_users']['ru']
-
-
 @dp.message_handler(commands='start')
 async def start_work_bot(message: types.Message):
-    text: str = 'Здраствуйте, ' \
+    text: str = f'{all_answer_for_user["greeting"]["ru"]}, ' \
                 f'{message.from_user.first_name} '
     await message.answer(text=text,
                          reply_markup=
@@ -21,7 +17,9 @@ async def start_work_bot(message: types.Message):
 @dp.message_handler(commands='help')
 async def give_all_commands_for_users(message: types.Message):
     text: str = ''
-    for command, description in all_commands_for_users.items():
+    for command, description in \
+            all_answer_for_user['all_commands_for_users']['ru'].\
+                                                         items():
         text += \
             command + ' - ' + description + '\n'
     await message.answer(text=text)
@@ -32,6 +30,7 @@ async def manual_for_bot(message: types.Message):
     url_gif_for_user: str = \
         all_urls['manual_for_bot']
 
+    #не помещал данную фразу в json файл
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'
@@ -45,6 +44,7 @@ async def menu_bot(message: types.Message):
     url_gif_for_user: str = \
         all_urls['menu_bot']
 
+    # не помещал данную фразу в json файл
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'
@@ -56,10 +56,10 @@ async def menu_bot(message: types.Message):
 @dp.message_handler(content_types=['contact'])
 async def get_contact_users(message: types.Message):
     if message.contact.user_id == message.from_user.id:
-        text: str = 'Регистрация пройдена'
+        text: str = all_answer_for_user['registration_positive']['ru']
         await message.answer(text=text)
         db.add_user(int(message.from_user.id),
                     str(message.contact.phone_number))
     else:
-        text: str = 'Регистрация НЕ пройдена'
+        text: str = all_answer_for_user['registration_negative']['ru']
         await message.answer(text=text)
