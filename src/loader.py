@@ -25,13 +25,14 @@ async def create_all_preciso_table():
 
 try:
 
-    #так работает (разбираюсь почему):
+    # так работает (разбираюсь почему):
+    # это не асинхронный запуск:
     loop = asyncio.get_event_loop()
     loop.run_until_complete(db.create_table_users())
     loop.run_until_complete(db.create_table_products())
     #так не работает
     # asyncio.run(create_all_preciso_table())
-    # или
+    # и так не работает
     # asyncio.run(db.create_table_users())
     # asyncio.run(db.create_table_products())
     # db.create_table_users()
