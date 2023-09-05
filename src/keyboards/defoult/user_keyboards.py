@@ -9,7 +9,7 @@ commands_start_keyboard = \
                 KeyboardButton(text='Инструкция')
             ],
             [
-                KeyboardButton(text='Меню'),
+                KeyboardButton(text='Список товаров'),
                 KeyboardButton(text='Разработчик')
             ],
             [

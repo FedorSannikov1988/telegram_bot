@@ -1,8 +1,7 @@
 from answers import all_answer_for_user, all_urls
 from keyboards import commands_start_keyboard
 from aiogram import types
-from loader import dp
-from loader import db
+from loader import dp, db
 
 
 @dp.message_handler(commands='start')
@@ -55,11 +54,28 @@ async def menu_bot(message: types.Message):
 
 @dp.message_handler(content_types=['contact'])
 async def get_contact_users(message: types.Message):
+
     if message.contact.user_id == message.from_user.id:
-        text: str = all_answer_for_user['registration_positive']['ru']
+
+        user_id: int = int(message.from_user.id)
+        user_phone: str = str(message.contact.phone_number)
+        search_results_user = await db.select_user_info(id=user_id,
+                                                        phone=user_phone)
+
+        if search_results_user:
+            search_results_user = search_results_user[0]
+
+        if not (user_id in search_results_user) or \
+           not (user_phone in search_results_user):
+
+            await db.add_user(id=user_id, phone=user_phone)
+            text: str = \
+                all_answer_for_user['registration_positive']['ru']
+        else:
+            text: str = \
+                all_answer_for_user['registration_user_exists']['ru']
         await message.answer(text=text)
-        await db.add_user(int(message.from_user.id),
-                    str(message.contact.phone_number))
     else:
-        text: str = all_answer_for_user['registration_negative']['ru']
+        text: str = \
+            all_answer_for_user['registration_negative']['ru']
         await message.answer(text=text)

@@ -6,14 +6,16 @@
 	  "/start": "начало работы",
 	  "/help": "список комманд доступных пользователю",
 	  "/manual": "видео инструкция",
-	  "/menu": "меню (возможности) которые предоставляет данный бот"
+	  "/menu": "меню (возможности) которые предоставляет данный бот",
+	  "/catalog": "каталог товаров"
 	},
 	"en":
 	{
 	  "/start": "start work",
 	  "/help": "list of commands available to the user",
 	  "/manual": "video instructions",
-	  "/menu": "menu (features) which this bot provides"
+	  "/menu": "menu (features) which this bot provides",
+	  "/catalog": "product catalog"
 	}
   },
   "registration_positive":
@@ -25,6 +27,11 @@
   {
 	"ru":"Регистрация НЕ пройдена",
 	"en":"Registration FAILED"
+  },
+  "registration_user_exists":
+  {
+	"ru":"Пользователь уже зарегестрирован",
+	"en":"The user is already registered"
   },
   "greeting":
   {

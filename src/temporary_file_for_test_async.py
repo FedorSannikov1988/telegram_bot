@@ -22,7 +22,5 @@ async def main():
     await asyncio.gather(task1, task2)
 
 print(time.strftime('%X'))
-
 asyncio.run(main())
-
 print(time.strftime('%X'))

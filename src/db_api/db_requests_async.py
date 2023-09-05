@@ -34,7 +34,8 @@ class Database_async:
         CREATE TABLE IF NOT EXISTS Products(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name VARCHAR(300),
-        quantity UNSIGNED INT
+        quantity UNSIGNED INT,
+        photo_path text
         );
         """
         await self.execute(sql, commit=True)
@@ -44,26 +45,26 @@ class Database_async:
         parameters = (id, phone)
         await self.execute(sql, parameters, commit=True)
 
-    async def add_product(self, name: str, quantity: int):
-        sql = 'INSERT INTO Products(name, quantity) VALUES(?, ?)'
-        parameters = (name, quantity)
+    async def add_product(self, name: str = None, quantity: int = 0, photo_path: str = ''):
+        sql = 'INSERT INTO Products(name, quantity, photo_path) VALUES(?, ?, ?)'
+        parameters = (name, quantity, photo_path)
         await self.execute(sql, parameters, commit=True)
 
-    async def select_user_info(self, **kwargs) -> list:
+    async def select_user_info(self, **kwargs):
         sql = 'SELECT * FROM Users WHERE '
         sql, parameters = self.format_args(sql, kwargs)
         return await self.execute(sql, parameters, fetchall=True)
 
-    async def select_product_info(self, **kwargs) -> list:
+    async def select_product_info(self, **kwargs):
         sql = 'SELECT * FROM Products WHERE '
         sql, parameters = self.format_args(sql, kwargs)
         return await self.execute(sql, parameters, fetchall=True)
 
-    async def select_all_users(self) -> list:
+    async def select_all_users(self):
         sql = 'SELECT * FROM Users'
         return await self.execute(sql, fetchall=True)
 
-    async def select_all_products(self) -> list:
+    async def select_all_products(self):
         sql = 'SELECT * FROM Products'
         return await self.execute(sql, fetchall=True)
 
@@ -71,9 +72,13 @@ class Database_async:
         sql = 'UPDATE Users SET phone=? WHERE id=?'
         return await self.execute(sql, parameters=(phone, id), commit=True)
 
-    async def update_quantity_product(self, name: str, quantity: int):
+    async def update_product_quantity(self, id: int, quantity: int):
         sql = 'UPDATE Products SET quantity=? WHERE name=?'
-        return await self.execute(sql, parameters=(quantity, name), commit=True)
+        return await self.execute(sql, parameters=(quantity, id), commit=True)
+
+    async def get_products_quantity(self) -> int:
+        sql = 'SELECT * FROM Products'
+        return len(await self.execute(sql, fetchall=True))
 
     async def delete_user(self, **kwargs):
         sql = 'DELETE FROM Users WHERE '
@@ -93,6 +98,7 @@ class Database_async:
 
     async def drop_all_tables(self):
         await self.execute('DROP TABLE Users', commit=True)
+        await self.execute('DROP TABLE Products', commit=True)
 
     @staticmethod
     def format_args(sql, parameters: dict) -> tuple:

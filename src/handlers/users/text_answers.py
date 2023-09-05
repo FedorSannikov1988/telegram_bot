@@ -1,8 +1,12 @@
 from answers import all_urls, all_answer_for_user
-from keyboards import commands_start_keyboard
-from aiogram.types import ReplyKeyboardRemove
+from keyboards import commands_start_keyboard, \
+                      navigation_items_callback, \
+                      get_product_inline_keyboard
+from aiogram.types import ReplyKeyboardRemove, \
+                          InputMediaPhoto, \
+                          InputFile
 from aiogram import types
-from loader import dp
+from loader import dp, db, bot
 
 
 @dp.message_handler(text=['Клавиатура'])
@@ -68,3 +72,39 @@ async def menu_bot(message: types.Message):
     await message.answer(text=text)
     await message.answer_animation(animation=
                                    url_gif_for_user)
+
+
+@dp.message_handler(text=['Список товаров'])
+@dp.message_handler(commands=['catalog'])
+async def start_looking_list_products(message: types.Message):
+    first_item_info = await db.select_product_info(id=1)
+    first_item_info = first_item_info[0]
+    _, name, quantity, photo_path = first_item_info
+    text = f"Название товара: {name} \n" \
+           f"Количество товара: {quantity}"
+    photo = InputFile(path_or_bytesio=photo_path)
+    await message.answer_photo(photo=photo,
+                               caption=text,
+                               reply_markup=
+                               await get_product_inline_keyboard(id=1))
+
+
+@dp.callback_query_handler(navigation_items_callback.filter(for_data='products'))
+async def see_new_product(call: types.CallbackQuery):
+    current_product_id = int(call.data.split(':')[-1])
+    first_item_info = await db.select_product_info(id=current_product_id)
+    first_item_info = first_item_info[0]
+    _, name, count, photo_path = first_item_info
+    text = f"Название товара: {name}\n" \
+           f"Количество товара: {count}"
+    photo = InputFile(path_or_bytesio=photo_path)
+    await bot.edit_message_media(media=
+                                 InputMediaPhoto(media=photo,
+                                                 caption=text),
+                                 chat_id=
+                                 call.message.chat.id,
+                                 message_id=
+                                 call.message.message_id,
+                                 reply_markup=
+                                 await get_product_inline_keyboard(
+                                     id=current_product_id))
