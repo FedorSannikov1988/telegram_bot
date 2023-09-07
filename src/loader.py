@@ -19,7 +19,9 @@ try:
     # таблицы для начала работы
     loop = asyncio.get_event_loop()
     create_needs_tables = \
-        [db.create_table_users(), db.create_table_products()]
+        [db.create_table_users(),
+         db.create_table_products(),
+         db.create_table_shopping_cart()]
     loop.run_until_complete(asyncio.gather(*create_needs_tables))
 except aiosqlite.OperationalError as sql_error:
     print(f'{sql_error = }')

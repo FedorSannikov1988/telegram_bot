@@ -83,10 +83,15 @@ async def start_looking_list_products(message: types.Message):
     text = f"Название товара: {name} \n" \
            f"Количество товара: {quantity}"
     photo = InputFile(path_or_bytesio=photo_path)
-    await message.answer_photo(photo=photo,
-                               caption=text,
-                               reply_markup=
-                               await get_product_inline_keyboard(id=1))
+
+    args_for_answer_photo = {
+        'photo': photo,
+        'caption': text,
+        'reply_markup':
+            await get_product_inline_keyboard(id=1)
+    }
+
+    await message.answer_photo(**args_for_answer_photo)
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='products'))
@@ -109,3 +114,19 @@ async def see_new_product(call: types.CallbackQuery):
     }
 
     await bot.edit_message_media(**args_for_edit_message_media)
+
+
+@dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
+async def answer_click_button_buy(call: types.CallbackQuery):
+    current_product_id = int(call.data.split(':')[-1])
+    first_item_info = await db.select_product_info(id=current_product_id)
+    first_item_info = first_item_info[0]
+    id, _, quantity, _ = first_item_info
+
+    text: str = \
+        f'Номер товара в каталоге: {id}\n' \
+        f'Количество упаковок на складе: {quantity}\n' \
+        f'Вы купили одну упаковку'
+
+    await bot.send_message(text=text,
+                           chat_id=call.message.chat.id)

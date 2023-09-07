@@ -10,11 +10,12 @@ commands_start_keyboard = \
             ],
             [
                 KeyboardButton(text='Список товаров'),
-                KeyboardButton(text='Разработчик')
+                KeyboardButton(text='Корзина покупок'),
+                KeyboardButton(text='Регистрация',
+                               request_contact=True),
             ],
             [
-                KeyboardButton(text='Зарегистрироваться',
-                               request_contact=True),
+                KeyboardButton(text='Разработчик'),
                 KeyboardButton(text='Скрыть меню')
             ]
         ],
