@@ -121,12 +121,30 @@ async def answer_click_button_buy(call: types.CallbackQuery):
     current_product_id = int(call.data.split(':')[-1])
     first_item_info = await db.select_product_info(id=current_product_id)
     first_item_info = first_item_info[0]
-    id, _, quantity, _ = first_item_info
+    product_id, _, product_quantity, _ = first_item_info
+
+    user_id = call.from_user.id
+    cart_user = await db.select_user_cart(user_id=user_id)
+    if not cart_user:
+        await db.add_purchase(user_id=user_id,
+                              purchases=str(product_id))
+    else:
+        cart_user = cart_user[0]
+        cart_user = cart_user[2]
+        products = cart_user.split(' ')
+        print('products_1:')
+        print(products)
+        products = ' '.join(products)
+        products = products + ' ' + str(product_id)
+        print('products_2:')
+        print(products)
+        await db.update_user_purchase(user_id=user_id,
+                                      purchases=products)
 
     text: str = \
-        f'Номер товара в каталоге: {id}\n' \
-        f'Количество упаковок на складе: {quantity}\n' \
-        f'Вы купили одну упаковку'
+        f'Номер товара в каталоге: {product_id}\n' \
+        f'Количество упаковок на складе: {product_quantity}\n' \
+        f'Одна упаковка добавлена в корзину'
 
     await bot.send_message(text=text,
                            chat_id=call.message.chat.id)

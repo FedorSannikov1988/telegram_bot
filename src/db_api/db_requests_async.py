@@ -61,16 +61,21 @@ class Database_async:
         await self.execute(sql, parameters, commit=True)
 
     async def add_purchase(self, user_id: int, purchases: str = None):
-        sql = 'INSERT INTO Cart(user_id, purchases) VALUES(?, ?)'
+        sql = 'INSERT INTO Сart(user_id, purchases) VALUES(?, ?)'
         parameters = (user_id, purchases)
         await self.execute(sql, parameters, commit=True)
 
     async def update_user_purchase(self, user_id: int, purchases: str = None):
-        sql = 'UPDATE Cart SET purchases=? WHERE user_id=?'
+        sql = 'UPDATE Сart SET purchases=? WHERE user_id=?'
         return await self.execute(sql, parameters=(purchases, user_id), commit=True)
 
     async def select_user_info(self, **kwargs):
         sql = 'SELECT * FROM Users WHERE '
+        sql, parameters = self.format_args(sql, kwargs)
+        return await self.execute(sql, parameters, fetchall=True)
+
+    async def select_user_cart(self, **kwargs):
+        sql = 'SELECT * FROM Сart WHERE '
         sql, parameters = self.format_args(sql, kwargs)
         return await self.execute(sql, parameters, fetchall=True)
 
