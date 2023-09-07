@@ -97,7 +97,7 @@ class Database_async:
         return await self.execute(sql, parameters=(phone, id), commit=True)
 
     async def update_product_quantity(self, id: int, quantity: int):
-        sql = 'UPDATE Products SET quantity=? WHERE name=?'
+        sql = 'UPDATE Products SET quantity=? WHERE id=?'
         return await self.execute(sql, parameters=(quantity, id), commit=True)
 
     async def get_products_quantity(self) -> int:

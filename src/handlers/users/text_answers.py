@@ -138,8 +138,15 @@ async def answer_click_button_buy(call: types.CallbackQuery):
         products = products + ' ' + str(product_id)
         print('products_2:')
         print(products)
+
+
         await db.update_user_purchase(user_id=user_id,
                                       purchases=products)
+
+    await db.update_product_quantity(id=product_id,
+                                     quantity=product_quantity - 1)
+
+
 
     text: str = \
         f'Номер товара в каталоге: {product_id}\n' \
