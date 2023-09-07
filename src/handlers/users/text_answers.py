@@ -98,13 +98,14 @@ async def see_new_product(call: types.CallbackQuery):
     text = f"Название товара: {name}\n" \
            f"Количество товара: {count}"
     photo = InputFile(path_or_bytesio=photo_path)
-    await bot.edit_message_media(media=
-                                 InputMediaPhoto(media=photo,
-                                                 caption=text),
-                                 chat_id=
-                                 call.message.chat.id,
-                                 message_id=
-                                 call.message.message_id,
-                                 reply_markup=
-                                 await get_product_inline_keyboard(
-                                     id=current_product_id))
+
+    args_for_edit_message_media = {
+        'media': InputMediaPhoto(media=photo,
+                                 caption=text),
+        'chat_id': call.message.chat.id,
+        'message_id': call.message.message_id,
+        'reply_markup': await get_product_inline_keyboard(id=
+                                                          current_product_id)
+    }
+
+    await bot.edit_message_media(**args_for_edit_message_media)

@@ -28,20 +28,3 @@ all_urls: dict = \
     load_answer_for_user(path_for_file=
                          path_for_urls)
 
-
-if __name__ == '__main__':
-    # нужно ли и можно ли оставлять такие хвосты
-    # (я имею в виду if __name__ == '__main__':)
-    # или после удачного тестирования безжалостно
-    # удалять ?
-    all_answer_for_user_path = Path('data_storage_text', 'users_answers.json')
-    all_answer_for_user: dict = \
-        load_answer_for_user(path_for_file=
-                             all_answer_for_user_path)
-    print(all_answer_for_user)
-    
-    all_urls_path = Path('data_storage_text', 'urls.json')
-    all_urls: dict = \
-        load_answer_for_user(path_for_file=
-                             all_urls_path)
-    print(all_urls)

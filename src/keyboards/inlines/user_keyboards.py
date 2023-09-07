@@ -41,5 +41,14 @@ async def get_product_inline_keyboard(id: int) -> InlineKeyboardMarkup:
                                              id=right_id)
                                          )
 
-        product_inline_keyboard.row(btm_left, btm_right)
+        btm_buy = InlineKeyboardButton(text='Купить',
+                                       callback_data=
+                                        navigation_items_callback.new(
+                                            for_data='products',
+                                            id=id)
+                                        )
+
+        product_inline_keyboard.row(btm_left, btm_buy, btm_right)
+        product_inline_keyboard.add(btm_buy)
+
     return product_inline_keyboard
