@@ -7,6 +7,7 @@ from aiogram.types import ReplyKeyboardRemove, \
                           InputFile
 from aiogram import types
 from loader import dp, db, bot
+import json
 
 
 @dp.message_handler(text=['Клавиатура'])
@@ -98,8 +99,7 @@ async def start_looking_list_products(message: types.Message):
 async def see_new_product(call: types.CallbackQuery):
     current_product_id = int(call.data.split(':')[-1])
     first_item_info = await db.select_product_info(id=current_product_id)
-    first_item_info = first_item_info[0]
-    _, name, count, photo_path = first_item_info
+    _, name, count, photo_path = first_item_info[0]
     text = f"Название товара: {name}\n" \
            f"Количество упаковок товара\n" \
            f" на складе: {count}"
@@ -117,18 +117,6 @@ async def see_new_product(call: types.CallbackQuery):
     await bot.edit_message_media(**args_for_edit_message_media)
 
 
-def create_dictionary_cart_user(cart_user: list) -> dict:
-    for_dictionary_cart_user = cart_user[0]
-    product_id_in_cart_user = for_dictionary_cart_user[2].split(' ')
-    product_quantity_in_cart_user = for_dictionary_cart_user[3].split(' ')
-
-    dictionary_cart_user: dict = {}
-    for index_product in range(len(product_id_in_cart_user)):
-        dictionary_cart_user[int(product_id_in_cart_user[index_product])] \
-            = int(product_quantity_in_cart_user[index_product])
-    return dictionary_cart_user
-
-
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
 async def answer_click_button_buy(call: types.CallbackQuery):
     current_product_id = int(call.data.split(':')[-1])
@@ -141,29 +129,29 @@ async def answer_click_button_buy(call: types.CallbackQuery):
         cart_user = await db.select_user_cart(user_id=
                                               user_id)
 
+        user_shopping_cart: dict = {}
+
         if not cart_user:
+            user_shopping_cart = {product_id: 1}
+
             await db.add_purchase(user_id=user_id,
-                                  purchases=product_id,
-                                  number_purchases=1)
+                                  purchases=
+                                  json.dumps(user_shopping_cart))
         else:
-            dictionary_cart_user = \
-                create_dictionary_cart_user(cart_user=cart_user)
+            user_shopping_cart = json.loads(cart_user[0][2])
 
-            if product_id in dictionary_cart_user.keys():
-                dictionary_cart_user[product_id] += 1
+            product_id_str = str(product_id)
+            if product_id_str in user_shopping_cart.keys():
+                user_shopping_cart[product_id_str] += 1
             else:
-                dictionary_cart_user.update({product_id: 1})
-
-            product_id_for_write = \
-                ' '.join(list(map(str, dictionary_cart_user.keys())))
-            product_quantity_for_write = \
-                ' '.join(list(map(str, dictionary_cart_user.values())))
+                user_shopping_cart.update({product_id: 1})
 
             await db.update_user_purchase(user_id=user_id,
-                                          purchases=product_id_for_write,
-                                          number_purchases=product_quantity_for_write)
+                                          purchases=
+                                          json.dumps(user_shopping_cart))
             await db.update_product_quantity(id=product_id,
-                                             quantity=product_quantity-1)
+                                             quantity=
+                                             product_quantity-1)
         text: str = \
             f'Порядковый номер товара ' \
             f'в каталоге: {product_id}\n' \

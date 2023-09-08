@@ -45,8 +45,7 @@ class Database_async:
         CREATE TABLE IF NOT EXISTS Сart(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id UNSIGNED INT,
-        purchases TEXT,
-        number_purchases TEXT
+        purchases TEXT
         );
         """
         await self.execute(sql, commit=True)
@@ -63,20 +62,16 @@ class Database_async:
 
     async def add_purchase(self,
                            user_id: int,
-                           purchases: str = None,
-                           number_purchases: str = None):
-        sql = 'INSERT INTO Сart(user_id, purchases, number_purchases) VALUES(?, ?, ?)'
-        parameters = (user_id, purchases, number_purchases)
+                           purchases: str = None):
+        sql = 'INSERT INTO Сart(user_id, purchases) VALUES(?, ?)'
+        parameters = (user_id, purchases)
         await self.execute(sql, parameters, commit=True)
 
     async def update_user_purchase(self,
                                    user_id: int,
-                                   purchases: str = None,
-                                   number_purchases: str = None):
-        sql = 'UPDATE Сart SET purchases=?, number_purchases=? WHERE user_id=?'
-        return await self.execute(sql, parameters=(purchases,
-                                                   number_purchases,
-                                                   user_id), commit=True)
+                                   purchases: str = None):
+        sql = 'UPDATE Сart SET purchases=? WHERE user_id=?'
+        return await self.execute(sql, parameters=(purchases, user_id), commit=True)
 
     async def select_user_info(self, **kwargs):
         sql = 'SELECT * FROM Users WHERE '
