@@ -1,4 +1,3 @@
-import asyncio
 from loader import db
 from aiogram.types import InlineKeyboardMarkup, \
                           InlineKeyboardButton
@@ -56,7 +55,7 @@ async def get_product_inline_keyboard(id: int) -> InlineKeyboardMarkup:
     btm_cart = InlineKeyboardButton(text='Корзина покупок',
                                     callback_data=
                                     navigation_items_callback.new(
-                                        for_data='products',
+                                        for_data='shopping cart',
                                         id=id)
                                     )
 
