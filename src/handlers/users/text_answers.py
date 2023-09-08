@@ -119,39 +119,55 @@ async def see_new_product(call: types.CallbackQuery):
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
 async def answer_click_button_buy(call: types.CallbackQuery):
     current_product_id = int(call.data.split(':')[-1])
-    first_item_info = await db.select_product_info(id=current_product_id)
-    first_item_info = first_item_info[0]
-    product_id, _, product_quantity, _ = first_item_info
+    product_info = await db.select_product_info(id=
+                                                current_product_id)
+    product_info = product_info[0]
+    product_id, _, product_quantity, _ = product_info
 
-    user_id = call.from_user.id
-    cart_user = await db.select_user_cart(user_id=user_id)
-    if not cart_user:
-        await db.add_purchase(user_id=user_id,
-                              purchases=str(product_id))
+    if product_quantity > 0:
+        user_id = call.from_user.id
+        cart_user = await db.select_user_cart(user_id=
+                                              user_id)
+
+        if not cart_user:
+            await db.add_purchase(user_id=user_id,
+                                  purchases=product_id,
+                                  number_purchases=1)
+        else:
+            for_dictionary_cart_user = cart_user[0]
+            product_id_in_cart_user = for_dictionary_cart_user[2].split(' ')
+            product_quantity_in_cart_user = for_dictionary_cart_user[3].split(' ')
+
+            dictionary_cart_user: dict = {}
+            for index_product in range(len(product_id_in_cart_user)):
+                dictionary_cart_user[int(product_id_in_cart_user[index_product])] \
+                    = int(product_quantity_in_cart_user[index_product])
+
+            if product_id in dictionary_cart_user.keys():
+                print(dictionary_cart_user)
+                dictionary_cart_user[product_id] += 1
+            else:
+                dictionary_cart_user.update({product_id: 1})
+
+            product_id_for_write = \
+                ' '.join(list(map(str, dictionary_cart_user.keys())))
+            product_quantity_for_write = \
+                ' '.join(list(map(str, dictionary_cart_user.values())))
+
+            await db.update_user_purchase(user_id=user_id,
+                                          purchases=product_id_for_write,
+                                          number_purchases=product_quantity_for_write)
+            await db.update_product_quantity(id=product_id,
+                                             quantity=product_quantity-1)
+        text: str = \
+            f'Номер товара в каталоге: {product_id}\n' \
+            f'Количество упаковок на складе: {product_quantity}\n' \
+            f'Одна упаковка добавлена в корзину'
     else:
-        cart_user = cart_user[0]
-        cart_user = cart_user[2]
-        products = cart_user.split(' ')
-        print('products_1:')
-        print(products)
-        products = ' '.join(products)
-        products = products + ' ' + str(product_id)
-        print('products_2:')
-        print(products)
-
-
-        await db.update_user_purchase(user_id=user_id,
-                                      purchases=products)
-
-    await db.update_product_quantity(id=product_id,
-                                     quantity=product_quantity - 1)
-
-
-
-    text: str = \
-        f'Номер товара в каталоге: {product_id}\n' \
-        f'Количество упаковок на складе: {product_quantity}\n' \
-        f'Одна упаковка добавлена в корзину'
+        text: str = \
+            f'Товара с порядковым номером: {product_id}\n' \
+            f'Сейчас нет на складе\n' \
+            f'Приносим свои извинения.' \
 
     await bot.send_message(text=text,
                            chat_id=call.message.chat.id)
