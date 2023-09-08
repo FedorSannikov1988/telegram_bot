@@ -7,7 +7,8 @@
 	  "/help": "список комманд доступных пользователю",
 	  "/manual": "видео инструкция",
 	  "/menu": "меню (возможности) которые предоставляет данный бот",
-	  "/catalog": "каталог товаров"
+	  "/catalog": "каталог товаров",
+	  "/cart": "корзина покупок пользователя"
 	},
 	"en":
 	{
@@ -15,7 +16,8 @@
 	  "/help": "list of commands available to the user",
 	  "/manual": "video instructions",
 	  "/menu": "menu (features) which this bot provides",
-	  "/catalog": "product catalog"
+	  "/catalog": "product catalog",
+	  "/cart": "user's shopping cart"
 	}
   },
   "registration_positive":

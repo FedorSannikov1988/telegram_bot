@@ -1,3 +1,4 @@
+from aiogram.utils.exceptions import MessageNotModified
 from answers import all_urls, all_answer_for_user
 from keyboards import commands_start_keyboard, \
                       navigation_items_callback, \
@@ -81,28 +82,29 @@ async def start_looking_list_products(message: types.Message):
     first_item_info = await db.select_product_info(id=1)
     first_item_info = first_item_info[0]
     _, name, quantity, photo_path = first_item_info
-    text = f"Название товара: {name} \n" \
-           f"Количество товара: {quantity}"
+    text = f"Название товара: {name}\n" \
+           f"Количество упаковок товара на складе: {quantity}"
+
     photo = InputFile(path_or_bytesio=photo_path)
 
     args_for_answer_photo = {
         'photo': photo,
         'caption': text,
         'reply_markup':
-            await get_product_inline_keyboard(id=1)
+            await get_product_inline_keyboard()
     }
 
     await message.answer_photo(**args_for_answer_photo)
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='products'))
-async def see_new_product(call: types.CallbackQuery):
-    current_product_id = int(call.data.split(':')[-1])
+async def see_new_product_in_catalog(call: types.CallbackQuery):
+    current_product_id = int(call.data.split(':')[-2])
+    quantity_purchased_product = int(call.data.split(':')[-1])
     first_item_info = await db.select_product_info(id=current_product_id)
-    _, name, count, photo_path = first_item_info[0]
+    _, name, quantity, photo_path = first_item_info[0]
     text = f"Название товара: {name}\n" \
-           f"Количество упаковок товара\n" \
-           f" на складе: {count}"
+           f"Количество упаковок товара на складе: {quantity}"
     photo = InputFile(path_or_bytesio=photo_path)
 
     args_for_edit_message_media = {
@@ -110,16 +112,26 @@ async def see_new_product(call: types.CallbackQuery):
                                  caption=text),
         'chat_id': call.message.chat.id,
         'message_id': call.message.message_id,
-        'reply_markup': await get_product_inline_keyboard(id=
-                                                          current_product_id)
+        'reply_markup':
+            await get_product_inline_keyboard(
+                id=current_product_id,
+                number_purchases=
+                quantity_purchased_product
+            )
     }
-
-    await bot.edit_message_media(**args_for_edit_message_media)
+    try:
+        await bot.edit_message_media(**args_for_edit_message_media)
+    except MessageNotModified:
+        pass
+    # возможно нужно написать функцию проверяющую
+    # изменилось сообщение или нет но я таким образом
+    # избавился от ошибки
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
 async def answer_click_button_buy(call: types.CallbackQuery):
-    current_product_id = int(call.data.split(':')[-1])
+    current_product_id = int(call.data.split(':')[-2])
+    quantity_purchased_product = int(call.data.split(':')[-1])
     product_info = await db.select_product_info(id=
                                                 current_product_id)
     product_id, _, product_quantity, _ = product_info[0]
@@ -132,7 +144,7 @@ async def answer_click_button_buy(call: types.CallbackQuery):
         user_shopping_cart: dict = {}
 
         if not cart_user:
-            user_shopping_cart = {product_id: 1}
+            user_shopping_cart = {product_id: quantity_purchased_product}
 
             await db.add_purchase(user_id=user_id,
                                   purchases=
@@ -142,29 +154,48 @@ async def answer_click_button_buy(call: types.CallbackQuery):
 
             product_id_str = str(product_id)
             if product_id_str in user_shopping_cart.keys():
-                user_shopping_cart[product_id_str] += 1
+                user_shopping_cart[product_id_str] += quantity_purchased_product
             else:
-                user_shopping_cart.update({product_id: 1})
+                user_shopping_cart.update({product_id: quantity_purchased_product})
 
             await db.update_user_purchase(user_id=user_id,
                                           purchases=
                                           json.dumps(user_shopping_cart))
+
             await db.update_product_quantity(id=product_id,
                                              quantity=
-                                             product_quantity-1)
+                                             product_quantity-quantity_purchased_product)
         text: str = \
-            f'Порядковый номер товара ' \
-            f'в каталоге: {product_id}\n' \
-            f'Количество упаковок на складе:' \
-            f' {product_quantity}\n' \
-            f'Одна упаковка добавлена Вашу ' \
-            f'корзину покупок'
+            f'Порядковый номер товара в каталоге: {product_id}\n' \
+            f'Количество упаковок на складе: {product_quantity}\n' \
+            f'Добавлено упаковок в корзину: {quantity_purchased_product}'
     else:
         text: str = \
-            f'Порядковый номер товара' \
-            f' в каталоге: {product_id}\n' \
-            f'Сейчас нет в наличии.\n' \
-            f'Приносим свои извинения.' \
+            f'Порядковый номер товара в каталоге: {product_id}\n' \
+            f'Сейчас нет в наличии. Приносим свои извинения.'
 
     await bot.send_message(text=text,
                            chat_id=call.message.chat.id)
+
+
+#@dp.message_handler(commands=['cart'])
+#@dp.message_handler(text=['Корзина покупок'])
+@dp.callback_query_handler(navigation_items_callback.filter(for_data='shopping cart'))
+async def view_shopping_cart(call: types.CallbackQuery):
+
+    first_item_info = await db.select_product_info(id=1)
+    first_item_info = first_item_info[0]
+    _, name, quantity, photo_path = first_item_info
+    text = f"Название товара: {name}\n" \
+           f"Количество упаковок товара на складе: {quantity}"
+
+    photo = InputFile(path_or_bytesio=photo_path)
+
+    args_for_answer_photo = {
+        'photo': photo,
+        'caption': text,
+        'reply_markup':
+            await get_product_inline_keyboard()
+    }
+
+    await message.answer_photo(**args_for_answer_photo)
