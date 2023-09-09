@@ -1,10 +1,11 @@
-from answers import all_answer_for_user, all_urls
 from keyboards import commands_start_keyboard
+from answers import all_answer_for_user, \
+                    all_urls
 from aiogram import types
 from loader import dp, db
 
 
-@dp.message_handler(commands='start')
+@dp.message_handler(commands=['start'])
 async def start_work_bot(message: types.Message):
     text: str = f'{all_answer_for_user["greeting"]["ru"]}, ' \
                 f'{message.from_user.first_name} '
@@ -13,7 +14,7 @@ async def start_work_bot(message: types.Message):
                          commands_start_keyboard)
 
 
-@dp.message_handler(commands='help')
+@dp.message_handler(commands=['help'])
 async def give_all_commands_for_users(message: types.Message):
     text: str = ''
     for command, description in \
@@ -24,26 +25,12 @@ async def give_all_commands_for_users(message: types.Message):
     await message.answer(text=text)
 
 
-@dp.message_handler(commands='manual')
+@dp.message_handler(commands=['manual'])
 async def manual_for_bot(message: types.Message):
     url_gif_for_user: str = \
         all_urls['manual_for_bot']
 
     #не помещал данную фразу в json файл
-    text: str = \
-        'Пока в разработке ... ' \
-        'Но я очень стараюсь:'
-    await message.answer(text=text)
-    await message.answer_animation(animation=
-                                   url_gif_for_user)
-
-
-@dp.message_handler(commands='menu')
-async def menu_bot(message: types.Message):
-    url_gif_for_user: str = \
-        all_urls['menu_bot']
-
-    # не помещал данную фразу в json файл
     text: str = \
         'Пока в разработке ... ' \
         'Но я очень стараюсь:'

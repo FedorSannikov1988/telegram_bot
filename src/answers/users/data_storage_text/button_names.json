@@ -4,9 +4,49 @@
 	"ru":"Помощь",
 	"en":"Help"
   },
+    "instruction":
+  {
+	"ru":"Инструкция",
+	"en":"Instruction"
+  },
     "list_products":
   {
-	"ru":"Список продуктов",
+	"ru":"Список товаров",
 	"en":"List products"
+  },
+    "cart":
+  {
+	"ru":"Корзина покупок",
+	"en":"Shopping cart"
+  },
+    "registration":
+  {
+	"ru":"Регистрация",
+	"en":"Registration"
+  },
+  	"developer":
+  {
+	"ru":"Разработчик",
+	"en":"Developer"
+  },
+  	"hide_menu":
+  {
+	"ru":"Скрыть меню",
+	"en":"Hide menu"
+  },
+  	"inline_buy":
+  {
+	"ru":"Купить",
+	"en":"Buy"
+  },
+  	"inline_go_payment":
+  {
+	"ru":"Перейти к оплате",
+	"en":"Go to payment"
+  },
+  	"inline_delete_shopping_cart":
+  {
+	"ru":"Удалить корзину покупок",
+	"en":"Delete Shopping cart"
   }
 }

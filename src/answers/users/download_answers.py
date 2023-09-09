@@ -20,6 +20,8 @@ path_for_urls = \
     Path('answers', 'users', 'data_storage_text', 'urls.json')
 path_for_users_answers = \
     Path('answers', 'users', 'data_storage_text', 'users_answers.json')
+path_for_button_names = \
+    Path('answers', 'users', 'data_storage_text', 'button_names.json')
 
 all_answer_for_user: dict = \
     load_answer_for_user(path_for_file=
@@ -27,4 +29,6 @@ all_answer_for_user: dict = \
 all_urls: dict = \
     load_answer_for_user(path_for_file=
                          path_for_urls)
-
+button_names: dict = \
+    load_answer_for_user(path_for_file=
+                         path_for_button_names)

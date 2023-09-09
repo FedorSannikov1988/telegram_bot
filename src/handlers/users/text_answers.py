@@ -2,12 +2,13 @@ from aiogram.utils.exceptions import MessageNotModified
 from answers import all_urls, all_answer_for_user
 from keyboards import commands_start_keyboard, \
                       navigation_items_callback, \
-                      get_product_inline_keyboard
+                      get_product_inline_keyboard, \
+                      get_shopping_cart_user
 from aiogram.types import ReplyKeyboardRemove, \
                           InputMediaPhoto, \
                           InputFile
-from aiogram import types
 from loader import dp, db, bot
+from aiogram import types
 import json
 
 
@@ -62,28 +63,14 @@ async def manual_for_bot(message: types.Message):
                                    url_gif_for_user)
 
 
-@dp.message_handler(text=['Меню'])
-async def menu_bot(message: types.Message):
-    url_gif_for_user: str = \
-        all_urls['menu_bot']
-
-    # не помещал данную фразу в json файл
-    text: str = \
-        'Пока в разработке ... ' \
-        'Но я очень стараюсь:'
-    await message.answer(text=text)
-    await message.answer_animation(animation=
-                                   url_gif_for_user)
-
-
 @dp.message_handler(text=['Список товаров'])
 @dp.message_handler(commands=['catalog'])
 async def start_looking_list_products(message: types.Message):
     first_item_info = await db.select_product_info(id=1)
     first_item_info = first_item_info[0]
     _, name, quantity, photo_path = first_item_info
-    text = f"Название товара: {name}\n" \
-           f"Количество упаковок товара на складе: {quantity}"
+    text = f"{all_answer_for_user['catalog_p1_v1']['ru']} {name}\n" \
+           f"{all_answer_for_user['catalog_p2_v1']['ru']} {quantity}"
 
     photo = InputFile(path_or_bytesio=photo_path)
 
@@ -103,8 +90,8 @@ async def see_new_product_in_catalog(call: types.CallbackQuery):
     quantity_purchased_product = int(call.data.split(':')[-1])
     first_item_info = await db.select_product_info(id=current_product_id)
     _, name, quantity, photo_path = first_item_info[0]
-    text = f"Название товара: {name}\n" \
-           f"Количество упаковок товара на складе: {quantity}"
+    text = f"{all_answer_for_user['catalog_p1_v1']['ru']} {name}\n" \
+           f"{all_answer_for_user['catalog_p2_v1']['ru']} {quantity}"
     photo = InputFile(path_or_bytesio=photo_path)
 
     args_for_edit_message_media = {
@@ -119,13 +106,13 @@ async def see_new_product_in_catalog(call: types.CallbackQuery):
                 quantity_purchased_product
             )
     }
+    # возможно нужно написать функцию проверяющую
+    # изменилось сообщение или нет но я таким образом
+    # избавился от ошибки
     try:
         await bot.edit_message_media(**args_for_edit_message_media)
     except MessageNotModified:
         pass
-    # возможно нужно написать функцию проверяющую
-    # изменилось сообщение или нет но я таким образом
-    # избавился от ошибки
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
@@ -161,41 +148,97 @@ async def answer_click_button_buy(call: types.CallbackQuery):
             await db.update_user_purchase(user_id=user_id,
                                           purchases=
                                           json.dumps(user_shopping_cart))
-
+            new_product_quantity = \
+                product_quantity - quantity_purchased_product
             await db.update_product_quantity(id=product_id,
                                              quantity=
-                                             product_quantity-quantity_purchased_product)
+                                             new_product_quantity)
         text: str = \
-            f'Порядковый номер товара в каталоге: {product_id}\n' \
-            f'Количество упаковок на складе: {product_quantity}\n' \
-            f'Добавлено упаковок в корзину: {quantity_purchased_product}'
+            f"{all_answer_for_user['catalog_p1_v2']['ru']} {product_id}\n" \
+            f"{all_answer_for_user['catalog_p2_v2']['ru']} {product_quantity}\n" \
+            f"{all_answer_for_user['catalog_p3_v2']['ru']} {quantity_purchased_product}"
     else:
         text: str = \
-            f'Порядковый номер товара в каталоге: {product_id}\n' \
-            f'Сейчас нет в наличии. Приносим свои извинения.'
+            f"{all_answer_for_user['catalog_p1_v2']['ru']} {product_id}\n" \
+            f"{all_answer_for_user['catalog_p4_v2']['ru']}"
 
     await bot.send_message(text=text,
                            chat_id=call.message.chat.id)
 
 
-#@dp.message_handler(commands=['cart'])
-#@dp.message_handler(text=['Корзина покупок'])
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='shopping cart'))
 async def view_shopping_cart(call: types.CallbackQuery):
+    for_buy_cart = call.data.split(':')[-1]
+    for_delete_cart = call.data.split(':')[-2]
+    user_id = call.from_user.id
+    cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
+    if for_buy_cart == '1':
+        cart_user = await db.select_user_cart(user_id=user_id)
 
-    first_item_info = await db.select_product_info(id=1)
-    first_item_info = first_item_info[0]
-    _, name, quantity, photo_path = first_item_info
-    text = f"Название товара: {name}\n" \
-           f"Количество упаковок товара на складе: {quantity}"
+        if cart_user:
+            cart_user: dict = json.loads(cart_user[0][2])
 
-    photo = InputFile(path_or_bytesio=photo_path)
+            for id_product, quantity_product in cart_user.items():
+                for_name_product = await db.select_product_info(id=id_product)
+                name_product = for_name_product[0][1]
+                cart_user_text += \
+                    name_product + ' - ' + \
+                    str(quantity_product) + \
+                    all_answer_for_user['shopping_cart_p2_v1']['ru'] + \
+                    '\n'
 
-    args_for_answer_photo = {
-        'photo': photo,
-        'caption': text,
-        'reply_markup':
-            await get_product_inline_keyboard()
-    }
+            await bot.send_message(text=cart_user_text,
+                                   chat_id=call.message.chat.id,
+                                   reply_markup=await get_shopping_cart_user())
+        else:
+            cart_user_text += all_answer_for_user['shopping_cart_p3_v1']['ru']
+            await bot.send_message(text=cart_user_text,
+                                   chat_id=call.message.chat.id)
 
-    await message.answer_photo(**args_for_answer_photo)
+    elif for_delete_cart == 'True':
+        cart_user_text += \
+            all_answer_for_user['shopping_cart_p3_v1']['ru']
+        await db.delete_cart(user_id=user_id)
+        await bot.send_message(text=cart_user_text,
+                               chat_id=call.message.chat.id)
+
+    elif for_buy_cart == 'True':
+        for_user_verification = await db.select_user_info(id=user_id)
+        if not for_user_verification:
+            cart_user_text = \
+                all_answer_for_user['shopping_cart_p4_v1']['ru']
+            await bot.send_message(text=cart_user_text,
+                                   chat_id=call.message.chat.id)
+        else:
+            await bot.send_animation(
+                chat_id=call.message.chat.id,
+                animation=all_urls['pay'])
+
+
+@dp.message_handler(text=['Корзина покупок'])
+@dp.message_handler(commands=['cart'])
+async def view_shopping_cart(message: types.Message):
+
+    user_id = message.from_user.id
+    cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
+
+    cart_user = await db.select_user_cart(user_id=user_id)
+
+    if cart_user:
+        cart_user: dict = json.loads(cart_user[0][2])
+
+        for id_product, quantity_product in cart_user.items():
+            for_name_product = await db.select_product_info(id=id_product)
+            name_product = for_name_product[0][1]
+            cart_user_text += \
+                name_product + ' - ' + \
+                str(quantity_product) + \
+                all_answer_for_user['shopping_cart_p2_v1']['ru'] + '\n'
+
+        await bot.send_message(text=cart_user_text,
+                               chat_id=message.chat.id,
+                               reply_markup=await get_shopping_cart_user())
+    else:
+        cart_user_text += all_answer_for_user['shopping_cart_p3_v1']['ru']
+        await bot.send_message(text=cart_user_text,
+                               chat_id=message.chat.id)

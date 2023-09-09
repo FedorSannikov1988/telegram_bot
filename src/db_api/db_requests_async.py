@@ -50,12 +50,16 @@ class Database_async:
         """
         await self.execute(sql, commit=True)
 
-    async def add_user(self, id: int, phone: str = None):
+    async def add_user(self, id: int,
+                       phone: str = None):
         sql = 'INSERT INTO Users(id, phone) VALUES(?, ?)'
         parameters = (id, phone)
         await self.execute(sql, parameters, commit=True)
 
-    async def add_product(self, name: str = None, quantity: int = 0, photo_path: str = ''):
+    async def add_product(self,
+                          name: str = None,
+                          quantity: int = 0,
+                          photo_path: str = ''):
         sql = 'INSERT INTO Products(name, quantity, photo_path) VALUES(?, ?, ?)'
         parameters = (name, quantity, photo_path)
         await self.execute(sql, parameters, commit=True)
@@ -96,11 +100,15 @@ class Database_async:
         sql = 'SELECT * FROM Products'
         return await self.execute(sql, fetchall=True)
 
-    async def update_user_phone(self, id: int, phone: str):
+    async def update_user_phone(self,
+                                id: int,
+                                phone: str):
         sql = 'UPDATE Users SET phone=? WHERE id=?'
         return await self.execute(sql, parameters=(phone, id), commit=True)
 
-    async def update_product_quantity(self, id: int, quantity: int):
+    async def update_product_quantity(self,
+                                      id: int,
+                                      quantity: int):
         sql = 'UPDATE Products SET quantity=? WHERE id=?'
         return await self.execute(sql, parameters=(quantity, id), commit=True)
 
@@ -118,15 +126,24 @@ class Database_async:
         sql, parameters = self.format_args(sql, parameters=kwargs)
         return await self.execute(sql, parameters=parameters, commit=True)
 
+    async def delete_cart(self, **kwargs):
+        sql = 'DELETE FROM Сart WHERE '
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, parameters=parameters, commit=True)
+
     async def delete_all_users(self):
         await self.execute('DELETE FROM Users WHERE True', commit=True)
 
     async def delete_all_products(self):
         await self.execute('DELETE FROM Products WHERE True', commit=True)
 
+    async def delete_all_users_carts(self):
+        await self.execute('DELETE FROM Сart WHERE True', commit=True)
+
     async def drop_all_tables(self):
         await self.execute('DROP TABLE Users', commit=True)
         await self.execute('DROP TABLE Products', commit=True)
+        await self.execute('DROP TABLE Сart', commit=True)
 
     @staticmethod
     def format_args(sql, parameters: dict) -> tuple:

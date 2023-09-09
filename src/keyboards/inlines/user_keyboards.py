@@ -1,7 +1,9 @@
 from loader import db
+from answers import button_names
 from aiogram.types import InlineKeyboardMarkup, \
                           InlineKeyboardButton
-from keyboards.inlines.callback_data import navigation_items_callback
+from .callback_data import navigation_items_callback, \
+                           navigation_cart_callback
 
 
 async def get_product_inline_keyboard(id: int = 1,
@@ -102,7 +104,7 @@ async def get_product_inline_keyboard(id: int = 1,
                                             id=id)
                                         )
 
-    btm_buy = InlineKeyboardButton(text='Купить',
+    btm_buy = InlineKeyboardButton(text=button_names['inline_buy']['ru'],
                                    callback_data=
                                    navigation_items_callback.new(
                                        number_purchases=
@@ -111,7 +113,7 @@ async def get_product_inline_keyboard(id: int = 1,
                                        id=id)
                                    )
 
-    btm_cart = InlineKeyboardButton(text='Корзина покупок',
+    btm_cart = InlineKeyboardButton(text=button_names['cart']['ru'],
                                     callback_data=
                                     navigation_items_callback.new(
                                         number_purchases=
@@ -125,3 +127,29 @@ async def get_product_inline_keyboard(id: int = 1,
     product_inline_keyboard.add(btm_cart)
 
     return product_inline_keyboard
+
+
+async def get_shopping_cart_user() -> InlineKeyboardMarkup:
+
+    cart_inline_keyboard = InlineKeyboardMarkup()
+
+    btm_buy = InlineKeyboardButton(text=
+                                   button_names['inline_go_payment']['ru'],
+                                   callback_data=
+                                   navigation_cart_callback.new(
+                                       cart='shopping cart',
+                                       for_delete_cart='False',
+                                       for_buy_cart='True')
+                                   )
+
+    btm_delete = InlineKeyboardButton(text=
+                                      button_names['inline_delete_shopping_cart']['ru'],
+                                      callback_data=
+                                      navigation_cart_callback.new(
+                                          cart='shopping cart',
+                                          for_delete_cart='True',
+                                          for_buy_cart='False')
+                                      )
+
+    cart_inline_keyboard.row(btm_buy, btm_delete)
+    return cart_inline_keyboard

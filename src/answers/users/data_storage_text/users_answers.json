@@ -6,7 +6,6 @@
 	  "/start": "начало работы",
 	  "/help": "список комманд доступных пользователю",
 	  "/manual": "видео инструкция",
-	  "/menu": "меню (возможности) которые предоставляет данный бот",
 	  "/catalog": "каталог товаров",
 	  "/cart": "корзина покупок пользователя"
 	},
@@ -15,7 +14,6 @@
 	  "/start": "start work",
 	  "/help": "list of commands available to the user",
 	  "/manual": "video instructions",
-	  "/menu": "menu (features) which this bot provides",
 	  "/catalog": "product catalog",
 	  "/cart": "user's shopping cart"
 	}
@@ -49,5 +47,55 @@
   {
 	"ru":"Для вызова меню введите комманду: /start",
 	"en":"To open the menu, enter the command: /start"
+  },
+  "catalog_p1_v1":
+  {
+	"ru":"Название товара:",
+	"en":"Product name:"
+  },
+  "catalog_p2_v1":
+  {
+	"ru":"Количество упаковок товара на складе:",
+	"en":"The number of packages of goods in stock:"
+  },
+  "catalog_p1_v2":
+  {
+	"ru":"Порядковый номер товара в каталоге:",
+	"en":"The serial number of the product in the catalog:"
+  },
+  "catalog_p2_v2":
+  {
+	"ru":"Количество упаковок на складе:",
+	"en":"The serial number of the product in the catalog:"
+  },
+  "catalog_p3_v2":
+  {
+	"ru":"Добавлено упаковок в корзину: ",
+	"en":"Added packages to the cart:"
+  },
+  "catalog_p4_v2":
+  {
+	"ru":"Сейчас нет в наличии. Приносим свои извинения.",
+	"en":"Currently out of stock. We apologize."
+  },
+  "shopping_cart_p1_v1":
+  {
+	"ru":"Корзина покупок:",
+	"en":"Shopping cart:"
+  },
+  "shopping_cart_p2_v1":
+  {
+	"ru":" упаковок/упаковка ",
+	"en":" packages/packaging "
+  },
+  "shopping_cart_p3_v1":
+  {
+	"ru":"Корзина пуста",
+	"en":"The basket is empty"
+  },
+  "shopping_cart_p4_v1":
+  {
+	"ru":"Необходимо пройти регистрацию",
+	"en":"It is necessary to register"
   }
 }
