@@ -66,7 +66,6 @@ async def get_product_inline_keyboard(id: int = 1,
                                             for_data='products',
                                             id=left_id)
                                         )
-
         btm_right = InlineKeyboardButton(text='>>>',
                                          callback_data=
                                          navigation_items_callback.new(
@@ -85,7 +84,7 @@ async def get_product_inline_keyboard(id: int = 1,
                                        plus_one_purchase,
                                        for_data='products',
                                        id=id)
-                                   )
+                                    )
     btm_minus = InlineKeyboardButton(text='-',
                                      callback_data=
                                      navigation_items_callback.new(
@@ -93,17 +92,15 @@ async def get_product_inline_keyboard(id: int = 1,
                                          minus_one_purchase,
                                          for_data='products',
                                          id=id)
-                                       )
-
+                                     )
     btm_quantity = InlineKeyboardButton(text=str(number_purchases),
                                         callback_data=
                                         navigation_items_callback.new(
                                             number_purchases=
                                             number_purchases,
-                                            for_data='buy product',
+                                            for_data='',
                                             id=id)
                                         )
-
     btm_buy = InlineKeyboardButton(text=button_names['inline_buy']['ru'],
                                    callback_data=
                                    navigation_items_callback.new(
@@ -112,7 +109,6 @@ async def get_product_inline_keyboard(id: int = 1,
                                        for_data='buy product',
                                        id=id)
                                    )
-
     btm_cart = InlineKeyboardButton(text=button_names['cart']['ru'],
                                     callback_data=
                                     navigation_items_callback.new(
@@ -125,7 +121,6 @@ async def get_product_inline_keyboard(id: int = 1,
     product_inline_keyboard.row(btm_plus, btm_quantity, btm_minus)
     product_inline_keyboard.add(btm_buy)
     product_inline_keyboard.add(btm_cart)
-
     return product_inline_keyboard
 
 
@@ -137,18 +132,20 @@ async def get_shopping_cart_user() -> InlineKeyboardMarkup:
                                    button_names['inline_go_payment']['ru'],
                                    callback_data=
                                    navigation_cart_callback.new(
-                                       cart='shopping cart',
-                                       for_delete_cart='False',
-                                       for_buy_cart='True')
+                                       operations_inside_bucket=
+                                       'shopping cart',
+                                       for_delete_cart='',
+                                       for_buy_cart='buy cart')
                                    )
 
     btm_delete = InlineKeyboardButton(text=
                                       button_names['inline_delete_shopping_cart']['ru'],
                                       callback_data=
                                       navigation_cart_callback.new(
-                                          cart='shopping cart',
-                                          for_delete_cart='True',
-                                          for_buy_cart='False')
+                                          operations_inside_bucket=
+                                          'shopping cart',
+                                          for_delete_cart='delete cart',
+                                          for_buy_cart='')
                                       )
 
     cart_inline_keyboard.row(btm_buy, btm_delete)
