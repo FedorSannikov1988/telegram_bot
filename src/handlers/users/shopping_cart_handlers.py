@@ -2,6 +2,7 @@ from answers import all_urls, all_answer_for_user
 from keyboards import navigation_items_callback, \
                       navigation_cart_callback, \
                       get_shopping_cart_user
+from states import DeliveryState
 from loader import dp, db, bot
 from aiogram import types
 import json
@@ -56,9 +57,13 @@ async def view_shopping_cart(call: types.CallbackQuery):
                 await bot.send_message(text=cart_user_text,
                                        chat_id=call.message.chat.id)
             else:
-                await bot.send_animation(
-                    chat_id=call.message.chat.id,
-                    animation=all_urls['pay'])
+                await bot.send_message(text='Укажите дату доставки товара в формате дд.мм.гггг',
+                                       chat_id=call.message.chat.id)
+                await DeliveryState.wait_data.set()
+
+                #await bot.send_animation(
+                #    chat_id=call.message.chat.id,
+                #    animation=all_urls['pay'])
 
 
 @dp.message_handler(text=['Корзина покупок'])
