@@ -97,5 +97,60 @@
   {
 	"ru":"Необходимо пройти регистрацию",
 	"en":"It is necessary to register"
+  },
+  "delivery_p1_v1":
+  {
+	"ru":"Укажите дату доставки товара в формате дд.мм.гггг",
+	"en":"Specify the date of delivery of the goods in the format dd.mm.yyyy"
+  },
+  "delivery_p2_v1":
+  {
+	"ru":"Укажите время доставки в формате чч:мм",
+	"en":"Specify the delivery time in hh:mm format"
+  },
+  "delivery_p3_v1":
+  {
+	"ru":"Введите имя получателя (С большой буквы не каких цифр): ",
+	"en":"Enter the recipient's name (With a capital letter, not any numbers):"
+  },
+  "delivery_p4_v1":
+  {
+	"ru":"Введите адрес получателя: ",
+	"en":"Enter the recipient's address:"
+  },
+  "delivery_p5_v1":
+  {
+	"ru":"Доставка: ",
+	"en":"Delivery: "
+  },
+  "delivery_p6_v1":
+  {
+	"ru":"Дата: ",
+	"en":"Date: "
+  },
+  "delivery_p7_v1":
+  {
+	"ru":"Время: ",
+	"en":"Time: "
+  },
+  "delivery_p8_v1":
+  {
+	"ru":"Имя получателя: ",
+	"en":"Recipient's name: "
+  },
+  "delivery_p9_v1":
+  {
+	"ru":"Адресс: ",
+	"en":"Address: "
+  },
+  "delivery_p10_v1":
+  {
+	"ru":"Мы едем к Вам: ",
+	"en":"We are coming to you: "
+  },
+  "delivery_p11_v1":
+  {
+	"ru":"Iотовьте деньги: ",
+	"en":"Prepare the money: "
   }
 }

@@ -118,5 +118,4 @@ async def start_looking_list_products(message: types.Message):
         'reply_markup':
             await get_product_inline_keyboard()
     }
-
     await message.answer_photo(**args_for_answer_photo)

@@ -1,4 +1,6 @@
-from aiogram import Dispatcher, Bot
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram import Dispatcher, \
+                    Bot
 from db_api import Database_async
 from config import TOKEN
 from pathlib import Path
@@ -7,7 +9,8 @@ import asyncio
 
 
 bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+storage = MemoryStorage()
+dp = Dispatcher(bot, storage=storage)
 db_path = \
     Path('db_api', 'database', 'shop_database.db')
 db = Database_async(db_path=db_path)
