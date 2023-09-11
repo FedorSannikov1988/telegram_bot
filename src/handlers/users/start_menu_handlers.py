@@ -127,7 +127,8 @@ async def start_looking_list_products(message: types.Message):
 @dp.message_handler(commands=['ankete'])
 async def start_ankete(message: types.Message):
 
-    text = all_answer_for_user['ankete_q1']['ru']
+    text = all_answer_for_user['ankete_number_questions']['ru'] + '\n' + \
+           all_answer_for_user['ankete_q1']['ru']
     await message.answer(text=text)
     await QuestionnaireState.wait_what_like.set()
 

@@ -155,6 +155,11 @@
 	"ru":"Готовьте деньги: ",
 	"en":"Prepare the money: "
   },
+  "ankete_number_questions":
+  {
+	"ru":"Просим Вас в свободной форме ответить на два вопроса: ",
+	"en":"We ask you to answer two questions in a free form: "
+  },
   "ankete_q1":
   {
 	"ru":"Опишите что Вам НЕ понравилось в нашем Магазине: ",
