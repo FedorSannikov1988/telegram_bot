@@ -23,7 +23,7 @@ async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
     return cart_user_text
 
 
-@dp.message_handler(text=['Корзина покупок'])
+@dp.message_handler(text=['Корзина покупок', 'Shopping cart'])
 @dp.message_handler(commands=['cart'])
 async def view_shopping_cart(message: types.Message):
     user_id = message.from_user.id
@@ -33,13 +33,8 @@ async def view_shopping_cart(message: types.Message):
     if cart_user:
         cart_user: dict = json.loads(cart_user[0][2])
 
-        for id_product, quantity_product in cart_user.items():
-            for_name_product = await db.select_product_info(id=id_product)
-            name_product = for_name_product[0][1]
-            cart_user_text += \
-                name_product + ' - ' + \
-                str(quantity_product) + \
-                all_answer_for_user['shopping_cart_p2_v1']['ru'] + '\n'
+        cart_user_text = await shopping_list(cart_user_text=cart_user_text,
+                                             cart_user=cart_user)
 
         await bot.send_message(text=cart_user_text,
                                chat_id=message.chat.id,

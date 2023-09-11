@@ -7,7 +7,8 @@
 	  "/help": "список комманд доступных пользователю",
 	  "/manual": "видео инструкция",
 	  "/catalog": "каталог товаров",
-	  "/cart": "корзина покупок пользователя"
+	  "/cart": "корзина покупок пользователя",
+	  "/ankete": "анкета о качестве обслуживания"
 	},
 	"en":
 	{
@@ -15,7 +16,8 @@
 	  "/help": "list of commands available to the user",
 	  "/manual": "video instructions",
 	  "/catalog": "product catalog",
-	  "/cart": "user's shopping cart"
+	  "/cart": "user's shopping cart",
+	  "/ankete": "questionnaire about the quality of service"
 	}
   },
   "registration_positive":
@@ -150,7 +152,22 @@
   },
   "delivery_p11_v1":
   {
-	"ru":"Iотовьте деньги: ",
+	"ru":"Готовьте деньги: ",
 	"en":"Prepare the money: "
+  },
+  "ankete_q1":
+  {
+	"ru":"Опишите что Вам НЕ понравилось в нашем Магазине: ",
+	"en":"Describe what you didn't like in our Store: "
+  },
+  "ankete_q2":
+  {
+	"ru":"Опишите что Вам понравилось в нашем Магазине: ",
+	"en":"Describe what you liked in our Store: "
+  },
+  "ankete_resalt":
+  {
+	"ru":"Результаты анкетирования: ",
+	"en":"Survey results: "
   }
 }

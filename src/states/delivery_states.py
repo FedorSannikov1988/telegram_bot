@@ -9,3 +9,8 @@ class DeliveryState(StatesGroup):
     wait_address = State()
     wait_confirmation_order = State()
 
+
+class QuestionnaireState(StatesGroup):
+    wait_what_like = State()
+    wait_announcement_results = State()
+

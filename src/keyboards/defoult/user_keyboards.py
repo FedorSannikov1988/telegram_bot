@@ -16,6 +16,7 @@ commands_start_keyboard = \
                                request_contact=True),
             ],
             [
+                KeyboardButton(text=button_names['survey']['ru']),
                 KeyboardButton(text=button_names['developer']['ru']),
                 KeyboardButton(text=button_names['hide_menu']['ru'])
             ]
