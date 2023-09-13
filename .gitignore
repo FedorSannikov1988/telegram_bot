@@ -1,3 +1,6 @@
+# не включаем логи
+src/logs/logs.json
+
 # foto
 *.jpeg
 

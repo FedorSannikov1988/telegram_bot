@@ -6,6 +6,7 @@ from aiogram.types import InputMediaPhoto, \
 from answers import all_answer_for_user
 from loader import dp, db, bot
 from aiogram import types
+from loader import logger
 import json
 
 
@@ -36,8 +37,8 @@ async def see_new_product_in_catalog(call: types.CallbackQuery):
     # избавился от ошибки
     try:
         await bot.edit_message_media(**args_for_edit_message_media)
-    except MessageNotModified:
-        pass
+    except MessageNotModified as small_problem_caused_update:
+        logger.warning(small_problem_caused_update)
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
