@@ -23,6 +23,15 @@ async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
     return cart_user_text
 
 
+@dp.message_handler(commands=['test'])
+async def test_middlewares(message: types.Message, user_basket: tuple[int | str]):
+    print('***')
+    await message.answer(text=
+                         f'Тестируем middlewares \n'
+                         f'Содержание user_baske:\n '
+                         f'{user_basket}')
+
+
 @dp.message_handler(text=['Корзина покупок', 'Shopping cart'])
 @dp.message_handler(commands=['cart'])
 async def view_shopping_cart(message: types.Message):
