@@ -4,7 +4,8 @@ from loader import db
 import json
 
 
-class GeTestInfo(BaseMiddleware):
+class GetTestInfo(BaseMiddleware):
+
     async def on_process_message(self, message: types.Message, data: dict):
         data['test_middlewares'] = f'{message.from_user.id}'
 
@@ -12,8 +13,8 @@ class GeTestInfo(BaseMiddleware):
         data['test_middlewares'] = f'{call.from_user.id}'
 
 
-
 class GetUserCartInfo(BaseMiddleware):
+
 
     async def on_process_message(self,
                                  message: types.Message,
@@ -55,6 +56,14 @@ class GetUserCartInfo(BaseMiddleware):
 
 
 class GetProductInfo(BaseMiddleware):
+
+    async def on_process_message(self,
+                                 message: types.Message,
+                                 data: dict):
+
+        first_product_info = await db.select_product_info(id=1)
+        first_product_info = first_product_info[0]
+        data['first_product_info'] = first_product_info
 
     async def on_process_callback_query(self,
                                         call: types.CallbackQuery,

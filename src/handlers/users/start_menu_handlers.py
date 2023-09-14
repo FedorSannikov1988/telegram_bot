@@ -105,10 +105,10 @@ async def developer_bot(message: types.Message):
 
 @dp.message_handler(text=['Список товаров', 'List products'])
 @dp.message_handler(commands=['catalog'])
-async def start_looking_list_products(message: types.Message):
-    first_item_info = await db.select_product_info(id=1)
-    first_item_info = first_item_info[0]
-    _, name, quantity, photo_path = first_item_info
+async def start_looking_list_products(message: types.Message,
+                                      first_product_info: tuple):
+
+    _, name, quantity, photo_path = first_product_info
     text = f"{all_answer_for_user['catalog_p1_v1']['ru']} {name}\n" \
            f"{all_answer_for_user['catalog_p2_v1']['ru']} {quantity}"
 

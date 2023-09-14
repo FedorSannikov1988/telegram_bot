@@ -1,6 +1,6 @@
 from aiogram import Dispatcher
-from .databese_middlewares import GeTestInfo, GetProductInfo, GetUserCartInfo
+from .databese_middlewares import GetTestInfo, GetProductInfo, GetUserCartInfo
 
 
 def setup(dp: Dispatcher):
-    dp.middleware.setup(GeTestInfo())
+    dp.middleware.setup(GetTestInfo())

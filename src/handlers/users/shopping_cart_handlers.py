@@ -9,7 +9,6 @@ from answers import all_answer_for_user, \
 from states import DeliveryState
 from loader import dp, db, bot
 from aiogram import types
-import json
 
 
 async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
@@ -76,6 +75,7 @@ async def view_shopping_cart(call: types.CallbackQuery,
             await bot.send_message(text=cart_user_text,
                                    chat_id=call.message.chat.id)
     else:
+
         if 'delete cart' in call.data:
             cart_user_text += \
                 all_answer_for_user['shopping_cart_p3_v1']['ru']
