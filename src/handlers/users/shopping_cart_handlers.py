@@ -13,9 +13,7 @@ import json
 
 
 async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
-    for id_product, quantity_product in cart_user.items():
-        for_name_product = await db.select_product_info(id=id_product)
-        name_product = for_name_product[0][1]
+    for name_product, quantity_product in cart_user.items():
         cart_user_text += \
             name_product + ' - ' + \
             str(quantity_product) + \
@@ -24,26 +22,25 @@ async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
 
 
 @dp.message_handler(commands=['test'])
-async def test_middlewares(message: types.Message, user_basket: tuple[int | str]):
-    print('***')
+async def test_middlewares(message: types.Message, test_middlewares: str):
+    print('test_middlewares')
     await message.answer(text=
                          f'Тестируем middlewares \n'
                          f'Содержание user_baske:\n '
-                         f'{user_basket}')
+                         f'{test_middlewares}')
 
 
 @dp.message_handler(text=['Корзина покупок', 'Shopping cart'])
 @dp.message_handler(commands=['cart'])
-async def view_shopping_cart(message: types.Message):
-    user_id = message.from_user.id
+async def view_shopping_cart(message: types.Message,
+                             cart_user_info: dict[str, int]):
+
     cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
-    cart_user = await db.select_user_cart(user_id=user_id)
 
-    if cart_user:
-        cart_user: dict = json.loads(cart_user[0][2])
-
-        cart_user_text = await shopping_list(cart_user_text=cart_user_text,
-                                             cart_user=cart_user)
+    if cart_user_info:
+        cart_user_text = \
+            await shopping_list(cart_user=cart_user_info,
+                                cart_user_text=cart_user_text)
 
         await bot.send_message(text=cart_user_text,
                                chat_id=message.chat.id,
@@ -58,19 +55,18 @@ async def view_shopping_cart(message: types.Message):
                                                             'shopping cart'))
 @dp.callback_query_handler(navigation_cart_callback.filter(operations_inside_bucket=
                                                            'shopping cart'))
-async def view_shopping_cart(call: types.CallbackQuery):
+async def view_shopping_cart(call: types.CallbackQuery,
+                             cart_user_info: dict[str, int]):
 
     user_id = call.from_user.id
     cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
 
     if 'navigation_products_btm' in call.data:
-        cart_user = await db.select_user_cart(user_id=user_id)
 
-        if cart_user:
-            cart_user: dict = json.loads(cart_user[0][2])
+        if cart_user_info:
 
             cart_user_text = await shopping_list(cart_user_text=cart_user_text,
-                                                 cart_user=cart_user)
+                                                 cart_user=cart_user_info)
 
             await bot.send_message(text=cart_user_text,
                                    chat_id=call.message.chat.id,
@@ -138,9 +134,10 @@ async def get_name_for_delivery(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=DeliveryState.wait_address)
-async def get_name_for_delivery(message: types.Message, state: FSMContext):
-    # специально сложил address в state
-    # что бы потом работать с ним а не с message
+async def get_name_for_delivery(message: types.Message,
+                                state: FSMContext,
+                                cart_user_info: dict[str, int]):
+
     await state.update_data({'address': message.text})
 
     data = await state.get_data()
@@ -151,12 +148,10 @@ async def get_name_for_delivery(message: types.Message, state: FSMContext):
                         f"{all_answer_for_user['delivery_p8_v1']['ru']} {data['name']} \n" \
                         f"{all_answer_for_user['delivery_p9_v1']['ru']} {data['address']} \n"
 
-    cart_user = await db.select_user_cart(user_id=message.from_user.id)
-    cart_user: dict = json.loads(cart_user[0][2])
     cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
 
-    cart_user_text = await shopping_list(cart_user_text=cart_user_text,
-                                         cart_user=cart_user)
+    cart_user_text = await shopping_list(cart_user=cart_user_info,
+                                         cart_user_text=cart_user_text)
 
     response_user: str = confirmation_text + cart_user_text
     await message.answer(text=response_user)

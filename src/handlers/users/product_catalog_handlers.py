@@ -11,11 +11,12 @@ import json
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='products'))
-async def see_new_product_in_catalog(call: types.CallbackQuery):
+async def see_new_product_in_catalog(call: types.CallbackQuery, product_info):
+
     current_product_id = int(call.data.split(':')[-2])
     quantity_purchased_product = int(call.data.split(':')[-1])
-    first_item_info = await db.select_product_info(id=current_product_id)
-    _, name, quantity, photo_path = first_item_info[0]
+    _, name, quantity, photo_path = product_info[0]
+
     text = f"{all_answer_for_user['catalog_p1_v1']['ru']} {name}\n" \
            f"{all_answer_for_user['catalog_p2_v1']['ru']} {quantity}"
     photo = InputFile(path_or_bytesio=photo_path)
@@ -42,11 +43,9 @@ async def see_new_product_in_catalog(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
-async def answer_click_button_buy(call: types.CallbackQuery):
-    current_product_id = int(call.data.split(':')[-2])
+async def answer_click_button_buy(call: types.CallbackQuery, product_info):
+
     quantity_purchased_product = int(call.data.split(':')[-1])
-    product_info = await db.select_product_info(id=
-                                                current_product_id)
     product_id, _, product_quantity, _ = product_info[0]
 
     if product_quantity > 0:
