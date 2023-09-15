@@ -100,6 +100,11 @@
 	"ru":"Необходимо пройти регистрацию",
 	"en":"It is necessary to register"
   },
+  "shopping_cart_p5_v1":
+  {
+	"ru":"Корзина покупок пуста на данный момент (ранее Вы удалили из нее все товары)",
+	"en":"The shopping cart is empty at the moment (you previously removed all products from it)"
+  },
   "delivery_p1_v1":
   {
 	"ru":"Укажите дату доставки товара в формате дд.мм.гггг",

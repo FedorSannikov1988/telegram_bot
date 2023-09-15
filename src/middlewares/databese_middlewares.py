@@ -14,31 +14,60 @@ class GetTestInfo(BaseMiddleware):
 
 
 class GetUserCartInfo(BaseMiddleware):
+    def __init__(self, dp):
+        super().__init__()
+        self.dp = dp
 
     async def on_process_message(self,
                                  message: types.Message,
                                  data: dict):
 
-        user_id = message.from_user.id
-        cart_user = await db.select_user_cart(user_id=user_id)
+        text = message.text
+        command = message.get_command()
+        state_fsm = await self.dp.current_state().get_state()
 
-        if cart_user:
-            cart_user_dict = json.loads(cart_user[0][2])
+        search_message_one: str = 'Корзина покупок'
+        search_message_two: str = 'Shopping cart'
+        search_command_one: str = '/cart'
+        search_state_fsm_one: str = 'DeliveryState:wait_address'
 
-            for id_product, quantity_product in cart_user_dict.items():
-                name_product = await db.select_product_info(id=id_product)
-                if 'cart_user_info' not in data.keys():
-                    data['cart_user_info'] = {name_product[0][1]: quantity_product}
-                else:
-                    data['cart_user_info'].update({name_product[0][1]: quantity_product})
-        else:
-            data['cart_user_info'] = None
+        if (text is not None and search_message_one in text) or \
+           (text is not None and search_message_two in text) or \
+           (command is not None and search_command_one in command) or \
+           (state_fsm is not None and search_state_fsm_one in state_fsm):
+
+            user_id = message.from_user.id
+
+            data = \
+                await GetUserCartInfo.basket_formation(user_id=user_id,
+                                                       data=data)
 
     async def on_process_callback_query(self,
                                         call: types.CallbackQuery,
                                         data: dict):
 
-        user_id = call.from_user.id
+        to_check: str = call.data
+
+        search_callback_one: str = \
+            'navigation_products_btm:shopping cart:'
+        search_callback_two: str = \
+            'navigation_shopping_cart_btm:shopping cart:delete cart:'
+        search_callback_three: str = \
+            'navigation_shopping_cart_btm:shopping cart::buy cart'
+
+        if (search_callback_one in to_check) or \
+           (search_callback_two in to_check) or \
+           (search_callback_three in to_check):
+
+            user_id = call.from_user.id
+
+            data = \
+                await GetUserCartInfo.basket_formation(user_id=user_id,
+                                                       data=data)
+
+    @staticmethod
+    async def basket_formation(user_id: int, data: dict) -> dict:
+
         cart_user = await db.select_user_cart(user_id=user_id)
 
         if cart_user:
@@ -50,8 +79,10 @@ class GetUserCartInfo(BaseMiddleware):
                     data['cart_user_info'] = {name_product[0][1]: quantity_product}
                 else:
                     data['cart_user_info'].update({name_product[0][1]: quantity_product})
+
         else:
             data['cart_user_info'] = None
+        return data
 
 
 class GetProductInfo(BaseMiddleware):
@@ -60,9 +91,18 @@ class GetProductInfo(BaseMiddleware):
                                  message: types.Message,
                                  data: dict):
 
-        first_product_info = await db.select_product_info(id=1)
-        first_product_info = first_product_info[0]
-        data['first_product_info'] = first_product_info
+        text = message.text
+        command = message.get_command()
+
+        if (text is not None and 'Список товаров' in text) or \
+           (text is not None and 'List products' in text) or \
+           (command is not None and '/catalog' in command):
+
+            first_product_info = await db.select_product_info(id=1)
+            first_product_info = first_product_info[0]
+            data['first_product_info'] = first_product_info
+        else:
+            data['first_product_info'] = None
 
     async def on_process_callback_query(self,
                                         call: types.CallbackQuery,
@@ -103,3 +143,19 @@ class GetUserInfo(BaseMiddleware):
             data['contact_user_id'] = None
             data['contact_user_phone'] = None
             data['search_results_user'] = None
+
+    async def on_process_callback_query(self,
+                                        call: types.CallbackQuery,
+                                        data: dict):
+
+        to_check: str = call.data
+
+        intended_content: str = \
+            'navigation_shopping_cart_btm:shopping cart::buy cart'
+
+        if intended_content in to_check:
+            user_id = call.from_user.id
+            data['for_user_verification'] = \
+                await db.select_user_info(id=user_id)
+        else:
+            data['for_user_verification'] = None

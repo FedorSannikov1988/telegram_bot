@@ -21,8 +21,10 @@ async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
 
 
 @dp.message_handler(commands=['test'])
-async def test_middlewares(message: types.Message, test_middlewares: str):
+async def test_middlewares(message: types.Message,
+                           test_middlewares: str):
     print('test_middlewares')
+    print(test_middlewares)
     await message.answer(text=
                          f'Тестируем middlewares \n'
                          f'Содержание user_baske:\n '
@@ -54,13 +56,15 @@ async def view_shopping_cart(message: types.Message,
                                                             'shopping cart'))
 @dp.callback_query_handler(navigation_cart_callback.filter(operations_inside_bucket=
                                                            'shopping cart'))
-async def view_shopping_cart(call: types.CallbackQuery,
-                             cart_user_info: dict[str, int]):
+async def work_with_shopping_cart(call: types.CallbackQuery,
+                                  cart_user_info: dict[str, int],
+                                  for_user_verification: list):
 
     user_id = call.from_user.id
     cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
 
     if 'navigation_products_btm' in call.data:
+
 
         if cart_user_info:
 
@@ -75,27 +79,27 @@ async def view_shopping_cart(call: types.CallbackQuery,
             await bot.send_message(text=cart_user_text,
                                    chat_id=call.message.chat.id)
     else:
-
         if 'delete cart' in call.data:
             cart_user_text += \
                 all_answer_for_user['shopping_cart_p3_v1']['ru']
             await db.delete_cart(user_id=user_id)
             await bot.send_message(text=cart_user_text,
                                    chat_id=call.message.chat.id)
-        # можно заменить на else:
-        # но хочется что бы ветка собыий
-        # явно показывала куда она идет
         elif 'buy cart' in call.data:
-            for_user_verification = await db.select_user_info(id=user_id)
             if not for_user_verification:
                 cart_user_text = \
                     all_answer_for_user['shopping_cart_p4_v1']['ru']
                 await bot.send_message(text=cart_user_text,
                                        chat_id=call.message.chat.id)
-            else:
-                await bot.send_message(text=all_answer_for_user['delivery_p1_v1']['ru'],
+            elif cart_user_info:
+                await bot.send_message(text=
+                                       all_answer_for_user['delivery_p1_v1']['ru'],
                                        chat_id=call.message.chat.id)
                 await DeliveryState.wait_data.set()
+            else:
+                await bot.send_message(text=
+                                       all_answer_for_user['shopping_cart_p5_v1']['ru'],
+                                       chat_id=call.message.chat.id)
 
 
 @dp.message_handler(state=DeliveryState.wait_data)
@@ -159,3 +163,6 @@ async def get_name_for_delivery(message: types.Message,
     await message.answer_animation(animation=all_urls['delivery'])
     await message.answer(text=all_answer_for_user['delivery_p11_v1']['ru'])
     await message.answer_animation(animation=all_urls['pay'])
+
+    user_id = message.from_user.id
+    await db.delete_cart(user_id=user_id)

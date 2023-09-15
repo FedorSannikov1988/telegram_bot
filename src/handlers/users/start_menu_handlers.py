@@ -108,8 +108,9 @@ async def start_looking_list_products(message: types.Message,
                                       first_product_info: tuple):
 
     _, name, quantity, photo_path = first_product_info
-    text = f"{all_answer_for_user['catalog_p1_v1']['ru']} {name}\n" \
-           f"{all_answer_for_user['catalog_p2_v1']['ru']} {quantity}"
+    text = \
+        f"{all_answer_for_user['catalog_p1_v1']['ru']} {name}\n" \
+        f"{all_answer_for_user['catalog_p2_v1']['ru']} {quantity}"
 
     photo = InputFile(path_or_bytesio=photo_path)
 
