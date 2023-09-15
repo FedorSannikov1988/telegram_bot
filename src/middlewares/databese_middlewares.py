@@ -15,7 +15,6 @@ class GetTestInfo(BaseMiddleware):
 
 class GetUserCartInfo(BaseMiddleware):
 
-
     async def on_process_message(self,
                                  message: types.Message,
                                  data: dict):
@@ -79,3 +78,28 @@ class GetProductInfo(BaseMiddleware):
                 await db.select_product_info(id=current_product_id)
         else:
             data['product_info'] = None
+
+
+class GetUserInfo(BaseMiddleware):
+
+    async def on_process_message(self,
+                                 message: types.Message,
+                                 data: dict):
+
+        if message.contact:
+
+            user_id: int = int(message.contact.user_id)
+            user_phone: str = str(message.contact.phone_number)
+            search_results_user = \
+                await db.select_user_info(id=user_id,
+                                          phone=user_phone)
+
+            data['contact_user_id'] = user_id
+            data['contact_user_phone'] = user_phone
+            data['search_results_user'] = search_results_user
+
+        else:
+
+            data['contact_user_id'] = None
+            data['contact_user_phone'] = None
+            data['search_results_user'] = None

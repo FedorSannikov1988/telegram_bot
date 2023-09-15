@@ -47,31 +47,30 @@ async def manual_for_bot(message: types.Message):
 
 #регистрация пользователя
 @dp.message_handler(content_types=['contact'])
-async def get_contact_users(message: types.Message):
+async def get_contact_users(message: types.Message,
+                            contact_user_id: int,
+                            contact_user_phone: str,
+                            search_results_user: list):
 
     if message.contact.user_id == message.from_user.id:
 
-        user_id: int = int(message.from_user.id)
-        user_phone: str = str(message.contact.phone_number)
-        search_results_user = await db.select_user_info(id=user_id,
-                                                        phone=user_phone)
+        if not search_results_user:
 
-        if search_results_user:
-            search_results_user = search_results_user[0]
-
-        if not (user_id in search_results_user) or \
-           not (user_phone in search_results_user):
-
-            await db.add_user(id=user_id, phone=user_phone)
             text: str = \
                 all_answer_for_user['registration_positive']['ru']
-        else:
+
+            await db.add_user(id=contact_user_id,
+                              phone=contact_user_phone)
+
+        elif search_results_user:
+
             text: str = \
                 all_answer_for_user['registration_user_exists']['ru']
-        await message.answer(text=text)
-    else:
-        text: str = \
-            all_answer_for_user['registration_negative']['ru']
+
+        else:
+            text: str = \
+                all_answer_for_user['registration_negative']['ru']
+
         await message.answer(text=text)
 
 
