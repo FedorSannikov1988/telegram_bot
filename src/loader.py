@@ -8,8 +8,6 @@ from pathlib import Path
 import aiosqlite
 import asyncio
 
-
-
 bot = Bot(token=TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
@@ -32,10 +30,6 @@ try:
          db.create_table_shopping_cart()]
     loop.run_until_complete(asyncio.gather(*create_needs_tables))
 except aiosqlite.OperationalError as sql_error:
-    # сдесь нужно написать и вставить логер
-    # print(f'{sql_error = }')
     logger.error(sql_error)
 except Exception as all_error:
-    # сдесь нужно написать и вставить логер
-    # print(f'{all_error = }')
     logger.error(all_error)

@@ -33,9 +33,7 @@ async def see_new_product_in_catalog(call: types.CallbackQuery, product_info):
                 quantity_purchased_product
             )
     }
-    # возможно нужно написать функцию проверяющую
-    # изменилось сообщение или нет но я таким образом
-    # избавился от ошибки
+
     try:
         await bot.edit_message_media(**args_for_edit_message_media)
     except MessageNotModified as small_problem_caused_update:

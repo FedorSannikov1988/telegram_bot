@@ -4,15 +4,6 @@ from loader import db
 import json
 
 
-class GetTestInfo(BaseMiddleware):
-
-    async def on_process_message(self, message: types.Message, data: dict):
-        data['test_middlewares'] = f'{message.from_user.id}'
-
-    async def on_process_callback_query(self, call: types.CallbackQuery, data: dict):
-        data['test_middlewares'] = f'{call.from_user.id}'
-
-
 class GetUserCartInfo(BaseMiddleware):
     def __init__(self, dp):
         super().__init__()
@@ -94,9 +85,13 @@ class GetProductInfo(BaseMiddleware):
         text = message.text
         command = message.get_command()
 
-        if (text is not None and 'Список товаров' in text) or \
-           (text is not None and 'List products' in text) or \
-           (command is not None and '/catalog' in command):
+        search_message_one: str = 'Список товаров'
+        search_message_two: str = 'List products'
+        search_command_one: str = '/catalog'
+
+        if (text is not None and search_message_one in text) or \
+           (text is not None and search_message_two in text) or \
+           (command is not None and search_command_one in command):
 
             first_product_info = await db.select_product_info(id=1)
             first_product_info = first_product_info[0]
@@ -110,8 +105,13 @@ class GetProductInfo(BaseMiddleware):
 
         to_check: str = call.data
 
-        if 'navigation_products_btm:products:' in to_check \
-                or 'navigation_products_btm:buy product:' in to_check:
+        search_callback_one: str = \
+            'navigation_products_btm:products:'
+        search_callback_two: str = \
+            'navigation_products_btm:buy product:'
+
+        if search_callback_one in to_check or\
+           search_callback_two in to_check:
 
             current_product_id = int(call.data.split(':')[-2])
             data['product_info'] = \
@@ -150,10 +150,10 @@ class GetUserInfo(BaseMiddleware):
 
         to_check: str = call.data
 
-        intended_content: str = \
+        search_callback_one: str = \
             'navigation_shopping_cart_btm:shopping cart::buy cart'
 
-        if intended_content in to_check:
+        if search_callback_one in to_check:
             user_id = call.from_user.id
             data['for_user_verification'] = \
                 await db.select_user_info(id=user_id)
