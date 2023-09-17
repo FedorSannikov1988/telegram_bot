@@ -8,7 +8,7 @@ from pathlib import Path
 import aiosqlite
 import asyncio
 
-bot = Bot(token=TOKEN)
+bot = Bot(token=TOKEN, parse_mode='HTML')
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 db_path = \

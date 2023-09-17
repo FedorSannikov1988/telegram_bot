@@ -1,3 +1,8 @@
+from aiogram.utils.markdown import hstrikethrough, \
+                                   hunderline, \
+                                   hitalic, \
+                                   hlink, \
+                                   hbold
 from keyboards import get_product_inline_keyboard, \
                       commands_start_keyboard
 from aiogram.types import ReplyKeyboardRemove, \
@@ -13,7 +18,14 @@ from loader import dp, db
 @dp.message_handler(commands=['start'])
 async def start_work_bot(message: types.Message):
     text: str = f'{all_answer_for_user["greeting"]["ru"]}, ' \
-                f'{message.from_user.first_name} '
+                f'{hbold(message.from_user.first_name)} \n' \
+                f'Я - {hstrikethrough("БОЕВОЙ")} 🏹🪖⚔️ ' \
+                f'{hitalic("УЧЕБНЫЙ ПРОЕКТ")} 👨🏻‍🎓 ! \n' \
+                f'{hunderline("Будем делать покупки: ")} ' \
+                f'🍅, 🍆, 🥔, 🥕, 🥒, 🫑 для ' \
+                f'🥗 {hunderline("вместе.")}\n' \
+                f'Мой ➡️ ' \
+                f'{hlink( url= r"https://t.me/Fedor_Sannikov", title="создатель")}.'
     await message.answer(text=text,
                          reply_markup=
                          commands_start_keyboard)
