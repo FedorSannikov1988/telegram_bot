@@ -77,7 +77,7 @@ async def answer_click_button_buy(call: types.CallbackQuery, product_info):
                                              quantity=
                                              new_product_quantity)
         text: str = \
-            f"{all_answer_for_user['catalog_p1_v2']['ru']} {product_id}\n" \
+            f"{all_answer_for_user['catalog_p1_v2']['ru']}\n {product_id}\n" \
             f"{all_answer_for_user['catalog_p2_v2']['ru']} {product_quantity}\n" \
             f"{all_answer_for_user['catalog_p3_v2']['ru']} {quantity_purchased_product}"
     else:
@@ -85,5 +85,12 @@ async def answer_click_button_buy(call: types.CallbackQuery, product_info):
             f"{all_answer_for_user['catalog_p1_v2']['ru']} {product_id}\n" \
             f"{all_answer_for_user['catalog_p4_v2']['ru']}"
 
-    await bot.send_message(text=text,
-                           chat_id=call.message.chat.id)
+    #await bot.send_message(text=text,
+    #                       chat_id=call.message.chat.id,
+    #                       disable_notification=True)
+    #await bot.answer_callback_query(callback_query_id=call.id,
+    #                                text=text)
+
+    await bot.answer_callback_query(callback_query_id=call.id,
+                                    text=text,
+                                    show_alert=True)
