@@ -14,3 +14,8 @@ class QuestionnaireState(StatesGroup):
     wait_what_like = State()
     wait_announcement_results = State()
 
+
+class MoneyState(StatesGroup):
+    wait_amounts_money = State()
+
+

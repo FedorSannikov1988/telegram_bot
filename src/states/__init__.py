@@ -1,2 +1,3 @@
-from .delivery_states import DeliveryState, \
+from .delivery_states import MoneyState,\
+                             DeliveryState, \
                              QuestionnaireState

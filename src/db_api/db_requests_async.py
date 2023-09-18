@@ -50,6 +50,16 @@ class Database_async:
         """
         await self.execute(sql, commit=True)
 
+    async def create_table_wallet_user(self):
+        sql = """
+        CREATE TABLE IF NOT EXISTS Wallet(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id UNSIGNED INT,
+        cash UNSIGNED INT
+        );
+        """
+        await self.execute(sql, commit=True)
+
     async def add_user(self, id: int,
                        phone: str = None):
         sql = 'INSERT INTO Users(id, phone) VALUES(?, ?)'
@@ -71,11 +81,24 @@ class Database_async:
         parameters = (user_id, purchases)
         await self.execute(sql, parameters, commit=True)
 
+    async def add_wallet_user(self,
+                              user_id: int,
+                              cash: int):
+        sql = 'INSERT INTO Wallet(user_id, cash) VALUES(?, ?)'
+        parameters = (user_id, cash)
+        await self.execute(sql, parameters, commit=True)
+
     async def update_user_purchase(self,
                                    user_id: int,
                                    purchases: str = None):
         sql = 'UPDATE Сart SET purchases=? WHERE user_id=?'
         return await self.execute(sql, parameters=(purchases, user_id), commit=True)
+
+    async def update_user_wallet(self,
+                                user_id: int,
+                                cash: int):
+        sql = 'UPDATE Wallet SET cash=? WHERE user_id=?'
+        return await self.execute(sql, parameters=(cash, user_id), commit=True)
 
     async def select_user_info(self, **kwargs):
         sql = 'SELECT * FROM Users WHERE '
@@ -89,6 +112,11 @@ class Database_async:
 
     async def select_product_info(self, **kwargs):
         sql = 'SELECT * FROM Products WHERE '
+        sql, parameters = self.format_args(sql, kwargs)
+        return await self.execute(sql, parameters, fetchall=True)
+
+    async def select_wallet_info(self, **kwargs):
+        sql = 'SELECT * FROM Wallet WHERE '
         sql, parameters = self.format_args(sql, kwargs)
         return await self.execute(sql, parameters, fetchall=True)
 

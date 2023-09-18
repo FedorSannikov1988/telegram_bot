@@ -126,6 +126,9 @@ class GetUserInfo(BaseMiddleware):
                                  message: types.Message,
                                  data: dict):
 
+        command = message.get_command()
+        search_command_one: str = '/money'
+
         if message.contact:
 
             user_id: int = int(message.contact.user_id)
@@ -138,8 +141,13 @@ class GetUserInfo(BaseMiddleware):
             data['contact_user_phone'] = user_phone
             data['search_results_user'] = search_results_user
 
-        else:
+        elif command is not None and search_command_one in command:
+            user_id: int = int(message.from_user.id)
+            search_results_user = \
+                await db.select_user_info(id=user_id)
+            data['search_results_user'] = search_results_user
 
+        else:
             data['contact_user_id'] = None
             data['contact_user_phone'] = None
             data['search_results_user'] = None
@@ -159,3 +167,21 @@ class GetUserInfo(BaseMiddleware):
                 await db.select_user_info(id=user_id)
         else:
             data['for_user_verification'] = None
+
+
+class GetWalletInfo(BaseMiddleware):
+
+    async def on_process_message(self,
+                                 message: types.Message,
+                                 data: dict):
+
+        search_payload_one: str = 'add_money'
+
+        if message.successful_payment and \
+           message.successful_payment.invoice_payload == \
+                search_payload_one:
+
+            user_id: int = int(message.from_user.id)
+
+            data['wallet_info'] = \
+                await db.select_wallet_info(user_id=user_id)

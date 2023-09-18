@@ -3,12 +3,12 @@ from aiogram import Dispatcher, \
                     Bot
 from db_api import Database_async
 from loguru import logger
-from config import TOKEN
+from config import TOKEN_BOT
 from pathlib import Path
 import aiosqlite
 import asyncio
 
-bot = Bot(token=TOKEN, parse_mode='HTML')
+bot = Bot(token=TOKEN_BOT, parse_mode='HTML')
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 db_path = \
@@ -27,6 +27,7 @@ try:
     create_needs_tables = \
         [db.create_table_users(),
          db.create_table_products(),
+         db.create_table_wallet_user(),
          db.create_table_shopping_cart()]
     loop.run_until_complete(asyncio.gather(*create_needs_tables))
 except aiosqlite.OperationalError as sql_error:

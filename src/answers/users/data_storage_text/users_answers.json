@@ -8,7 +8,8 @@
 	  "/manual": "видео инструкция",
 	  "/catalog": "каталог товаров",
 	  "/cart": "корзина покупок пользователя",
-	  "/ankete": "анкета о качестве обслуживания"
+	  "/ankete": "анкета о качестве обслуживания",
+	  "/money": "пополнение балланса"
 	},
 	"en":
 	{
@@ -17,7 +18,8 @@
 	  "/manual": "video instructions",
 	  "/catalog": "product catalog",
 	  "/cart": "user's shopping cart",
-	  "/ankete": "questionnaire about the quality of service"
+	  "/ankete": "questionnaire about the quality of service",
+	  "/money": "replenishment ballance"
 	}
   },
   "registration_positive":
@@ -179,5 +181,30 @@
   {
 	"ru":"Результаты анкетирования: ",
 	"en":"Survey results: "
+  },
+  "give_money_p1":
+  {
+	"ru":"Введите сумму кратную 50 рублям и не менее 100 рублей на которую хотите пополнить счет.",
+	"en":"Enter a multiple of 50 rubles and at least 100 rubles for which you want to top up your account."
+  },
+  "give_money_p2":
+  {
+	"ru":"Необходимо пройти регистрацию.",
+	"en":"It is necessary to register."
+  },
+  "give_money_p3_v1":
+  {
+	"ru":"Баланс cоставляет ",
+	"en":"The balance is"
+  },
+  "give_money_p3_v2":
+  {
+	"ru":"Рублей",
+	"en":"Rubles"
+  },
+  "give_money_p4":
+  {
+	"ru":"Операция пополнения баланса НЕ выполнена",
+	"en":"The balance replenishment operation has NOT been completed"
   }
 }
