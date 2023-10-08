@@ -1,12 +1,11 @@
-from aiogram.dispatcher import FSMContext
-from aiogram.types import ContentType
-from aiogram.utils.markdown import hbold
-
-from answers import all_answer_for_user
 from .validation_amounts_money import ValidationAmountsMoney
+from aiogram.dispatcher import FSMContext
+from aiogram.utils.markdown import hbold
+from answers import all_answer_for_user
+from aiogram.types import ContentType
+from loader import db, dp, bot
 from states import MoneyState
 from config import TOKEN_UPAY
-from loader import db, dp, bot
 from aiogram import types
 
 
