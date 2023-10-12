@@ -1,3 +1,6 @@
+"""
+Creating a starting (main) keyboard
+"""
 from aiogram.types import ReplyKeyboardMarkup, \
                           KeyboardButton
 from answers import button_names

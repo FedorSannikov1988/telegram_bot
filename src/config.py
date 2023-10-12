@@ -1,3 +1,7 @@
+"""
+Loading a token for a bot from environment
+variables and token for a payment system
+"""
 from dotenv import load_dotenv
 import os
 

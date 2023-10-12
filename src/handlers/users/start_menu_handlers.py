@@ -1,3 +1,6 @@
+"""
+Getting started with the bot (main menu)
+"""
 from aiogram.utils.markdown import hstrikethrough, \
                                    hunderline, \
                                    hitalic, \
@@ -17,6 +20,12 @@ from loader import dp, db
 
 @dp.message_handler(commands=['start'])
 async def start_work_bot(message: types.Message):
+    """
+    Reaction to the start command.
+
+    :param message: types.Message
+    :return: None
+    """
     text: str = f'{all_answer_for_user["greeting"]["ru"]}, ' \
                 f'{hbold(message.from_user.first_name)} \n' \
                 f'Я - {hstrikethrough("БОЕВОЙ")} 🏹🪖⚔️ ' \
@@ -33,6 +42,12 @@ async def start_work_bot(message: types.Message):
 
 @dp.message_handler(commands=['help'])
 async def give_all_commands_for_users(message: types.Message):
+    """
+    Reaction to the help command.
+
+    :param message: types.Message
+    :return: None
+    """
     text: str = ''
     for command, description in \
             all_answer_for_user['all_commands_for_users']['ru'].\
@@ -45,6 +60,12 @@ async def give_all_commands_for_users(message: types.Message):
 @dp.message_handler(commands=['manual'])
 @dp.message_handler(text=['Инструкция', 'Instruction'])
 async def manual_for_bot(message: types.Message):
+    """
+    Reaction to the manual command.
+
+    :param message: types.Message
+    :return: None
+    """
     url_gif_for_user: str = \
         all_urls['manual_for_bot']
 
@@ -63,7 +84,15 @@ async def get_contact_users(message: types.Message,
                             contact_user_id: int,
                             contact_user_phone: str,
                             search_results_user: list):
+    """
+    User Registration
 
+    :param message: types.Message
+    :param contact_user_id: int
+    :param contact_user_phone: str
+    :param search_results_user: list
+    :return: None
+    """
     if message.contact.user_id == message.from_user.id:
 
         if not search_results_user:
@@ -88,6 +117,13 @@ async def get_contact_users(message: types.Message,
 
 @dp.message_handler(text=['Помощь', 'Help'])
 async def give_all_commands_for_users(message: types.Message):
+    """
+    Output of all bot commands.
+
+    :param message: types.Message
+    :return: None
+    """
+
     text: str = ''
     for command, description in \
             all_answer_for_user['all_commands_for_users']['ru'].items():
@@ -100,6 +136,12 @@ async def give_all_commands_for_users(message: types.Message):
 
 @dp.message_handler(text=['Скрыть меню', 'Hide menu'])
 async def close_menu(message: types.Message):
+    """
+    Reaction to the text "Hide menu".
+
+    :param message: types.Message
+    :return: None
+    """
     text: str = \
         all_answer_for_user['close_menu']['ru']
     await message.answer(text=text,
@@ -109,6 +151,12 @@ async def close_menu(message: types.Message):
 
 @dp.message_handler(text=['Разработчик', 'Developer'])
 async def developer_bot(message: types.Message):
+    """
+    Says who developed the bot.
+
+    :param message: types.Message
+    :return: None
+    """
     text: str = \
         all_answer_for_user['developer_contacts']['ru']
     await message.answer(text=text)
@@ -118,7 +166,13 @@ async def developer_bot(message: types.Message):
 @dp.message_handler(commands=['catalog'])
 async def start_looking_list_products(message: types.Message,
                                       first_product_info: tuple):
+    """
+    Starting the Product catalog view
 
+    :param message:
+    :param first_product_info:
+    :return: None
+    """
     _, name, quantity, photo_path = first_product_info
     text = \
         f"{all_answer_for_user['catalog_p1_v1']['ru']} {name}\n" \
@@ -138,7 +192,12 @@ async def start_looking_list_products(message: types.Message,
 @dp.message_handler(text=['Анкетирование', 'Survey'])
 @dp.message_handler(commands=['ankete'])
 async def start_ankete(message: types.Message):
+    """
+    Launching a questionnaire for the buyer.
 
+    :param message: types.Message
+    :return: None
+    """
     text = all_answer_for_user['ankete_number_questions']['ru'] + '\n' + \
            all_answer_for_user['ankete_q1']['ru']
     await message.answer(text=text)
@@ -147,6 +206,14 @@ async def start_ankete(message: types.Message):
 
 @dp.message_handler(state=QuestionnaireState.wait_what_like)
 async def get_not_like_store(message: types.Message, state: FSMContext):
+    """
+    The answer to the question what the customer
+    does not like in the store
+
+    :param message: types.Message
+    :param state: FSMContext
+    :return: None
+    """
     await state.update_data({'not_like': message.text})
     text = all_answer_for_user['ankete_q2']['ru']
     await message.answer(text=text)
@@ -155,6 +222,13 @@ async def get_not_like_store(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=QuestionnaireState.wait_announcement_results)
 async def get_like_store(message: types.Message, state: FSMContext):
+    """
+    The answer to the question what does the customer like in the store
+
+    :param message: FSMContext
+    :param state: FSMContext
+    :return: None
+    """
     await state.update_data({'like': message.text})
 
     data = await state.get_data()

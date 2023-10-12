@@ -1,3 +1,6 @@
+"""
+Callback for user keyboards
+"""
 from aiogram.utils.callback_data import CallbackData
 
 

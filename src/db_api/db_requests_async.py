@@ -1,3 +1,6 @@
+"""
+To work with the database in asynchronous mode.
+"""
 import aiosqlite
 from pathlib import Path
 

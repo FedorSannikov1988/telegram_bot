@@ -1,3 +1,6 @@
+"""
+Start app/bot
+"""
 from aiogram.utils import executor
 from handlers import dp
 import middlewares

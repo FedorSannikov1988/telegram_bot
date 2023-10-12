@@ -1,3 +1,6 @@
+"""
+Product Catalog
+"""
 from aiogram.utils.exceptions import MessageNotModified
 from keyboards import get_product_inline_keyboard,\
                       navigation_items_callback
@@ -11,8 +14,14 @@ import json
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='products'))
-async def see_new_product_in_catalog(call: types.CallbackQuery, product_info):
+async def see_new_product_in_catalog(call: types.CallbackQuery, product_info: list):
+    """
+    Scrolling the catalog by the user
 
+    :param call: types.CallbackQuery
+    :param product_info: list
+    :return: None
+    """
     current_product_id = int(call.data.split(':')[-2])
     quantity_purchased_product = int(call.data.split(':')[-1])
     _, name, quantity, photo_path = product_info[0]
@@ -41,7 +50,14 @@ async def see_new_product_in_catalog(call: types.CallbackQuery, product_info):
 
 
 @dp.callback_query_handler(navigation_items_callback.filter(for_data='buy product'))
-async def answer_click_button_buy(call: types.CallbackQuery, product_info):
+async def answer_click_button_buy(call: types.CallbackQuery, product_info: list):
+    """
+    Reaction when the buy button is clicked.
+
+    :param call: types.CallbackQuery
+    :param product_info: list
+    :return: None
+    """
 
     quantity_purchased_product = int(call.data.split(':')[-1])
     product_id, _, product_quantity, _ = product_info[0]

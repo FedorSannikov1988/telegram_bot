@@ -1,3 +1,7 @@
+"""
+To download all the necessary data to
+start the application /telegram bot
+"""
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram import Dispatcher, \
                     Bot

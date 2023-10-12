@@ -1,3 +1,6 @@
+"""
+For load data from a database
+"""
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram import types
 from loader import db

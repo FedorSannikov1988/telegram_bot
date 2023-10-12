@@ -1,3 +1,6 @@
+"""
+InlineKeyboard for user.
+"""
 from loader import db
 from answers import button_names
 from aiogram.types import InlineKeyboardMarkup, \
@@ -8,7 +11,14 @@ from .callback_data import navigation_items_callback, \
 
 async def get_product_inline_keyboard(id: int = 1,
                                       number_purchases: int = 1) -> InlineKeyboardMarkup:
+    """
+    Keyboard for the product catalog
+    and actions in the product catalog.
 
+    :param id: int
+    :param number_purchases: int
+    :return: InlineKeyboardMarkup
+    """
     product_info = await db.select_product_info(id=id)
     _, _, quantity_product, _ = product_info[0]
 
@@ -125,7 +135,11 @@ async def get_product_inline_keyboard(id: int = 1,
 
 
 async def get_shopping_cart_user() -> InlineKeyboardMarkup:
+    """
+    Keyboard for shopping cart.
 
+    :return: InlineKeyboardMarkup
+    """
     cart_inline_keyboard = InlineKeyboardMarkup()
 
     btm_buy = InlineKeyboardButton(text=

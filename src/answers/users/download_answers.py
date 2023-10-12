@@ -1,3 +1,7 @@
+"""
+To download responses for users from files:
+users_answers.json, button_names.json, urls.json
+"""
 import json
 from pathlib import Path
 

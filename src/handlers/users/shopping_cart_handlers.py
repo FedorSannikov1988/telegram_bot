@@ -1,3 +1,6 @@
+"""
+Shopping cart
+"""
 from .validation_for_delivery_questions import \
                       ValidationDeliveryQuestions
 from keyboards import navigation_items_callback, \
@@ -12,6 +15,13 @@ from aiogram import types
 
 
 async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
+    """
+    Output of the shopping cart of the main menu
+
+    :param cart_user_text: str
+    :param cart_user: dict
+    :return: None
+    """
     for name_product, quantity_product in cart_user.items():
         cart_user_text += \
             name_product + ' - ' + \
@@ -24,7 +34,13 @@ async def shopping_list(cart_user_text: str, cart_user: dict) -> str:
 @dp.message_handler(commands=['cart'])
 async def view_shopping_cart(message: types.Message,
                              cart_user_info: dict[str, int]):
+    """
+    Outputting the shopping cart from the catalog
 
+    :param message: types.Message
+    :param cart_user_info: dict[str, int]
+    :return: None
+    """
     cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
 
     if cart_user_info:
@@ -48,7 +64,14 @@ async def view_shopping_cart(message: types.Message,
 async def work_with_shopping_cart(call: types.CallbackQuery,
                                   cart_user_info: dict[str, int],
                                   for_user_verification: list):
+    """
+    Select an action (delete all or buy) in the shopping cart.
 
+    :param call: types.CallbackQuery
+    :param cart_user_info: dict[str, int]
+    :param for_user_verification: list
+    :return: None
+    """
     user_id = call.from_user.id
     cart_user_text: str = f"{all_answer_for_user['shopping_cart_p1_v1']['ru']}\n"
 
@@ -93,6 +116,13 @@ async def work_with_shopping_cart(call: types.CallbackQuery,
 
 @dp.message_handler(state=DeliveryState.wait_data)
 async def get_data_for_delivery(message: types.Message, state: FSMContext):
+    """
+    Entering the date of delivery of the goods.
+
+    :param message: types.Message
+    :param state: FSMContext
+    :return: None
+    """
     if ValidationDeliveryQuestions().\
             validation_data(date_string=message.text,
                             format_date="%d.%m.%Y"):
@@ -105,6 +135,13 @@ async def get_data_for_delivery(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=DeliveryState.wait_time)
 async def get_time_for_delivery(message: types.Message, state: FSMContext):
+    """
+    Entering the time of delivery of the goods.
+
+    :param message: types.Message
+    :param state: FSMContext
+    :return: None
+    """
     if ValidationDeliveryQuestions().\
             validation_time(time_string=message.text,
                             format_date="%H:%M"):
@@ -117,6 +154,13 @@ async def get_time_for_delivery(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=DeliveryState.wait_name_recipient_parcel)
 async def get_name_for_delivery(message: types.Message, state: FSMContext):
+    """
+    Entering recipient's name of delivery of the goods.
+
+    :param message: types.Message
+    :param state: FSMContext
+    :return: None
+    """
     if ValidationDeliveryQuestions().validation_name(max_len=35,
                                                      text=message.text):
         await message.answer(text=all_answer_for_user['delivery_p4_v1']['ru'])
@@ -130,6 +174,14 @@ async def get_name_for_delivery(message: types.Message, state: FSMContext):
 async def get_name_for_delivery(message: types.Message,
                                 state: FSMContext,
                                 cart_user_info: dict[str, int]):
+    """
+    Verification (confirmation) of the data entered by the user.
+
+    :param message: types.Message
+    :param state: FSMContext
+    :param cart_user_info: dict[str, int]
+    :return: None
+    """
 
     await state.update_data({'address': message.text})
 

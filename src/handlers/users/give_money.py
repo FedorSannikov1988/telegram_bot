@@ -1,3 +1,6 @@
+"""
+To pay for a purchase
+"""
 from .validation_amounts_money import ValidationAmountsMoney
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.markdown import hbold
@@ -10,8 +13,14 @@ from aiogram import types
 
 
 @dp.message_handler(commands=['money'])
-async def add_money(message: types.Message, search_results_user):
+async def add_money(message: types.Message, search_results_user: list):
+    """
+    Launching a chain of handlers to replenish the wallet.
 
+    :param message: types.Message
+    :param search_results_user: list
+    :return: None
+    """
     if search_results_user:
         text: str = all_answer_for_user['give_money_p1']['ru']
         await MoneyState.wait_amounts_money.set()
@@ -22,7 +31,14 @@ async def add_money(message: types.Message, search_results_user):
 
 @dp.message_handler(state=MoneyState.wait_amounts_money)
 async def enter_amounts_money(message: types.Message, state: FSMContext):
+    """
+    Entering the amount for which the user wants to replenish
+    the personal wallet (with subsequent validation of the entered amount).
 
+    :param message: types.Message
+    :param state: FSMContext
+    :return: None
+    """
     money: str = message.text
 
     if ValidationAmountsMoney().validation_amount(multiplicity=50,
@@ -50,12 +66,24 @@ async def enter_amounts_money(message: types.Message, state: FSMContext):
 
 @dp.pre_checkout_query_handler()
 async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery):
+    """
+    Displaying a message about adding an item to the cart
+    :param pre_checkout_query: types.PreCheckoutQuery
+    :return: None
+    """
     await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
 
 
 @dp.message_handler(content_types=ContentType.SUCCESSFUL_PAYMENT)
-async def process_pay(message: types.Message, wallet_info):
+async def process_pay(message: types.Message, wallet_info: list):
+    """
+    Adding money to the user's personal wallet if the money
+    transaction to the store account is completed successfully.
 
+    :param message: types.Message
+    :param wallet_info: list
+    :return: None
+    """
     if message.successful_payment.invoice_payload == "add_money":
 
         user_id: int = int(message.from_user.id)
